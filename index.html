@@ -6,6 +6,7 @@
     <title>Age of History 2 - Русская версия</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
+        /* ВСЕ СТИЛИ СОХРАНЕНЫ БЕЗ ИЗМЕНЕНИЙ */
         :root {
             --primary-color: #1a1a2e;
             --secondary-color: #16213e;
@@ -1248,58 +1249,17 @@
             provinceTooltip: document.getElementById('province-tooltip')
         };
 
-        // Initialize game - ИЗМЕНЕННАЯ ФУНКЦИЯ
+        // Initialize game
         function initGame() {
-    try {
-        // Проверка данных перед началом
-        if (!validateGameData()) {
-            showNotification("Ошибка данных игры. Пожалуйста, обновите страницу.");
-            return;
+            createCountries();
+            setupEventListeners();
+            renderCountrySelect();
+            elements.countrySelectModal.style.display = 'flex';
         }
-        
-        createCountries();
-        createProvinces();
-        setupEventListeners();
-        renderCountrySelect();
-        elements.countrySelectModal.style.display = 'flex';
-        
-    } catch (error) {
-        console.error("Initialization error:", error);
-        showNotification("Критическая ошибка. Пожалуйста, обновите страницу.");
-    }
-}
 
-// Новая функция проверки данных
-function validateGameData() {
-    const {realCountryNames, realCountryFlags, countryHistories} = gameState;
-    
-    if (realCountryNames.length !== 10 || 
-        realCountryFlags.length !== 10 || 
-        countryHistories.length !== 10) {
-        console.error("Invalid country data length");
-        return false;
-    }
-    
-    if (!elements.countrySelectModal || !elements.startGameBtn) {
-        console.error("Required DOM elements missing");
-        return false;
-    }
-    
-    return true;
-}
-
-
-        // Create countries - ИЗМЕНЕННАЯ ФУНКЦИЯ
+        // Create countries
         function createCountries() {
-            console.log("Creating countries...");
-            
-            // Проверяем, что у нас есть все необходимые данные
-            if (gameState.realCountryNames.length !== 10 || 
-                gameState.realCountryFlags.length !== 10 ||
-                gameState.countryHistories.length !== 10) {
-                console.error("Country data is incomplete!");
-                return;
-            }
+            gameState.countries = [];
             
             for (let i = 0; i < 10; i++) {
                 const country = {
@@ -1328,26 +1288,11 @@ function validateGameData() {
 
                 gameState.countries.push(country);
             }
-            
-            console.log(`Created ${gameState.countries.length} countries`);
         }
 
-        // Render country select screen - ИЗМЕНЕННАЯ ФУНКЦИЯ
+        // Render country select screen
         function renderCountrySelect() {
-            console.log("Rendering country select...");
-            
-            if (!elements.countrySelectGrid) {
-                console.error("Country select grid element not found!");
-                return;
-            }
-            
             elements.countrySelectGrid.innerHTML = '';
-            
-            if (gameState.countries.length === 0) {
-                console.error("No countries to display!");
-                elements.countrySelectGrid.innerHTML = '<p>Ошибка загрузки стран. Пожалуйста, обновите страницу.</p>';
-                return;
-            }
             
             gameState.countries.forEach(country => {
                 const countryEl = document.createElement('div');
@@ -1359,7 +1304,7 @@ function validateGameData() {
                 flagEl.src = country.flag;
                 flagEl.alt = country.name;
                 flagEl.onerror = function() {
-                    console.error(`Failed to load flag for ${country.name}`);
+                    this.onerror = null;
                     this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA2MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIGZpbGw9IiM3ZjhjOGQiLz48L3N2Zz4=';
                 };
                 
@@ -1389,139 +1334,152 @@ function validateGameData() {
                 
                 elements.countrySelectGrid.appendChild(countryEl);
             });
+        }
+
+        // Start game with selected country
+        function startGame() {
+            if (!gameState.playerCountry) {
+                showNotification("Пожалуйста, выберите страну для игры");
+                return;
+            }
             
-            console.log(`Rendered ${gameState.countries.length} countries in select screen`);
+            elements.countrySelectModal.style.display = 'none';
+            elements.historyModal.classList.remove('active');
+            gameState.gameStarted = true;
+            gameState.playerCountry.color = gameState.playerColor;
+            
+            createProvinces();
+            updateUI();
+            showNotification(`Добро пожаловать в Age of History 2! Вы играете за ${gameState.playerCountry.name}.`);
         }
 
         // Create provinces
         function createProvinces() {
-    if (!elements.gameMap) {
-        console.error("Game map element not found");
-        return;
-    }
-
-    const mapWidth = elements.gameMap.clientWidth;
-    const mapHeight = elements.gameMap.clientHeight;
-    
-    // Сначала создаем все страны
-    gameState.countries.forEach(country => {
-        const provinceCount = 5 + Math.floor(Math.random() * 3);
-        
-        const capital = {
-            id: gameState.provinces.length,
-            x: Math.floor(Math.random() * (mapWidth - 100) + 50),
-            y: Math.floor(Math.random() * (mapHeight - 100) + 50),
-            size: 40 + Math.floor(Math.random() * 20),
-            name: `${country.name} (столица)`,
-            countryId: country.id,  // Убедитесь, что country.id существует
-            isCapital: true,
-            army: 1 + Math.floor(Math.random() * 2),
-            navy: ['Великобритания', 'Япония'].includes(country.name) ? 1 : 0,
-            airforce: 0,
-            goldIncome: 3 + Math.floor(Math.random() * 3),
-            manpowerIncome: 2 + Math.floor(Math.random() * 2),
-            element: null
-        };
-        
-        gameState.provinces.push(capital);
-        country.provinces.push(capital.id);
-
-        // Создаем остальные провинции
-        for (let i = 1; i < provinceCount; i++) {
-            const angle = (i / provinceCount) * Math.PI * 2;
-            const distance = 80 + Math.floor(Math.random() * 60);
+            if (!elements.gameMap) return;
             
-            const province = {
-                id: gameState.provinces.length,
-                x: Math.max(30, Math.min(mapWidth - 30, capital.x + Math.cos(angle) * distance)),
-                y: Math.max(30, Math.min(mapHeight - 30, capital.y + Math.sin(angle) * distance)),
-                size: 30 + Math.floor(Math.random() * 20),
-                name: `${getProvinceName(country.name)} ${i}`,
-                countryId: country.id,  // Убедитесь, что country.id существует
-                isCapital: false,
-                army: Math.floor(Math.random() * 2),
-                navy: 0,
-                airforce: 0,
-                goldIncome: 1 + Math.floor(Math.random() * 3),
-                manpowerIncome: 1 + Math.floor(Math.random() * 2),
-                element: null
-            };
+            gameState.provinces = [];
+            const mapWidth = elements.gameMap.clientWidth;
+            const mapHeight = elements.gameMap.clientHeight;
             
-            gameState.provinces.push(province);
-            country.provinces.push(province.id);
+            // Create provinces for each country
+            gameState.countries.forEach(country => {
+                const provinceCount = 3 + Math.floor(Math.random() * 3);
+                const capitalX = Math.floor(Math.random() * (mapWidth - 100) + 50);
+                const capitalY = Math.floor(Math.random() * (mapHeight - 100) + 50);
+                
+                // Capital
+                const capital = {
+                    id: gameState.provinces.length,
+                    x: capitalX,
+                    y: capitalY,
+                    size: 40 + Math.floor(Math.random() * 20),
+                    name: `${country.name} (столица)`,
+                    countryId: country.id,
+                    isCapital: true,
+                    army: 1 + Math.floor(Math.random() * 2),
+                    navy: 0,
+                    airforce: 0,
+                    goldIncome: 3 + Math.floor(Math.random() * 3),
+                    manpowerIncome: 2 + Math.floor(Math.random() * 2),
+                    element: null
+                };
+                
+                gameState.provinces.push(capital);
+                country.provinces.push(capital.id);
+                
+                // Regular provinces
+                for (let i = 0; i < provinceCount; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 80 + Math.random() * 60;
+                    const x = Math.max(30, Math.min(mapWidth - 30, capitalX + Math.cos(angle) * distance));
+                    const y = Math.max(30, Math.min(mapHeight - 30, capitalY + Math.sin(angle) * distance));
+                    
+                    const province = {
+                        id: gameState.provinces.length,
+                        x: x,
+                        y: y,
+                        size: 30 + Math.floor(Math.random() * 20),
+                        name: `${getProvinceName(country.name)}`,
+                        countryId: country.id,
+                        isCapital: false,
+                        army: Math.floor(Math.random() * 2),
+                        navy: 0,
+                        airforce: 0,
+                        goldIncome: 1 + Math.floor(Math.random() * 3),
+                        manpowerIncome: 1 + Math.floor(Math.random() * 2),
+                        element: null
+                    };
+                    
+                    gameState.provinces.push(province);
+                    country.provinces.push(province.id);
+                }
+            });
+            
+            // Neutral provinces
+            for (let i = 0; i < 10; i++) {
+                const province = {
+                    id: gameState.provinces.length,
+                    x: Math.floor(Math.random() * (mapWidth - 60) + 30),
+                    y: Math.floor(Math.random() * (mapHeight - 60) + 30),
+                    size: 25 + Math.floor(Math.random() * 15),
+                    name: `Нейтральная территория ${i+1}`,
+                    countryId: null,
+                    isCapital: false,
+                    army: 0,
+                    navy: 0,
+                    airforce: 0,
+                    goldIncome: 1 + Math.floor(Math.random() * 2),
+                    manpowerIncome: 1 + Math.floor(Math.random() * 2),
+                    element: null
+                };
+                
+                gameState.provinces.push(province);
+            }
+            
+            renderProvinces();
         }
-    });
-    
-    // Добавляем нейтральные провинции
-    for (let i = 0; i < 15; i++) {
-        const province = {
-            id: gameState.provinces.length,
-            x: Math.floor(Math.random() * (mapWidth - 60) + 30),
-            y: Math.floor(Math.random() * (mapHeight - 60) + 30),
-            size: 25 + Math.floor(Math.random() * 15),
-            name: `Нейтральная территория ${i+1}`,
-            countryId: null,  // Явно указываем null для нейтральных территорий
-            isCapital: false,
-            army: 0,
-            navy: 0,
-            airforce: 0,
-            goldIncome: 1 + Math.floor(Math.random() * 2),
-            manpowerIncome: 1 + Math.floor(Math.random() * 2),
-            element: null
-        };
-        
-        gameState.provinces.push(province);
-    }
-    
-    renderProvinces();
-}
+
         // Generate province name based on country
         function getProvinceName(countryName) {
             const prefixes = {
-                'Россия': ['Московская', 'Новгородская', 'Киевская', 'Владимирская', 'Смоленская', 'Рязанская', 'Тверская', 'Суздальская'],
-                'США': ['Техас', 'Калифорния', 'Флорида', 'Нью-Йорк', 'Иллинойс', 'Огайо', 'Джорджия', 'Пенсильвания'],
-                'Китай': ['Шаньдун', 'Хэнань', 'Сычуань', 'Гуандун', 'Цзянсу', 'Хэбэй', 'Хунань', 'Аньхой'],
-                'Германия': ['Бавария', 'Пруссия', 'Саксония', 'Гессен', 'Вестфалия', 'Ганновер', 'Баден', 'Вюртемберг'],
-                'Франция': ['Иль-де-Франс', 'Прованс', 'Бретань', 'Нормандия', 'Бургундия', 'Гасконь', 'Лангедок', 'Эльзас'],
-                'Великобритания': ['Англия', 'Шотландия', 'Уэльс', 'Корнуолл', 'Йоркшир', 'Ланкашир', 'Эссекс', 'Кент'],
-                'Япония': ['Канто', 'Кансай', 'Тохоку', 'Тюбу', 'Тюгоку', 'Сикоку', 'Кюсю', 'Хоккайдо'],
-                'Индия': ['Бенгалия', 'Гуджарат', 'Махараштра', 'Тамилнад', 'Карнатака', 'Пенджаб', 'Раджастхан', 'Орисса'],
-                'Бразилия': ['Сан-Паулу', 'Рио-де-Жанейро', 'Минас-Жерайс', 'Баия', 'Пернамбуку', 'Риу-Гранди-ду-Сул', 'Парана', 'Сеара'],
-                'Италия': ['Ломбардия', 'Пьемонт', 'Тоскана', 'Венето', 'Сицилия', 'Сардиния', 'Кампания', 'Апулия']
+                'Россия': ['Московская', 'Новгородская', 'Киевская', 'Владимирская'],
+                'США': ['Техас', 'Калифорния', 'Флорида', 'Нью-Йорк'],
+                'Китай': ['Шаньдун', 'Хэнань', 'Сычуань', 'Гуандун'],
+                'Германия': ['Бавария', 'Пруссия', 'Саксония', 'Гессен'],
+                'Франция': ['Иль-де-Франс', 'Прованс', 'Бретань', 'Нормандия'],
+                'Великобритания': ['Англия', 'Шотландия', 'Уэльс', 'Корнуолл'],
+                'Япония': ['Канто', 'Кансай', 'Тохоку', 'Тюбу'],
+                'Индия': ['Бенгалия', 'Гуджарат', 'Махараштра', 'Тамилнад'],
+                'Бразилия': ['Сан-Паулу', 'Рио-де-Жанейро', 'Минас-Жерайс', 'Баия'],
+                'Италия': ['Ломбардия', 'Пьемонт', 'Тоскана', 'Венето']
             };
             
-            return prefixes[countryName][Math.floor(Math.random() * prefixes[countryName].length)];
+            const countryPrefixes = prefixes[countryName] || ['Провинция'];
+            return countryPrefixes[Math.floor(Math.random() * countryPrefixes.length)];
         }
 
         // Render provinces on map
         function renderProvinces() {
-    if (!elements.gameMap) {
-        console.error("Game map element not found");
-        return;
-    }
+            if (!elements.gameMap) return;
 
-    elements.gameMap.innerHTML = '';
-    
-    gameState.provinces.forEach(province => {
-        try {
-            const provinceEl = document.createElement('div');
-            provinceEl.className = 'province';
-            provinceEl.style.width = `${province.size}px`;
-            provinceEl.style.height = `${province.size}px`;
-            provinceEl.style.left = `${province.x - province.size / 2}px`;
-            provinceEl.style.top = `${province.y - province.size / 2}px`;
-            provinceEl.dataset.provinceId = province.id;
+            elements.gameMap.innerHTML = '';
+            
+            gameState.provinces.forEach(province => {
+                const provinceEl = document.createElement('div');
+                provinceEl.className = 'province';
+                provinceEl.style.width = `${province.size}px`;
+                provinceEl.style.height = `${province.size}px`;
+                provinceEl.style.left = `${province.x - province.size / 2}px`;
+                provinceEl.style.top = `${province.y - province.size / 2}px`;
+                provinceEl.dataset.provinceId = province.id;
 
-            const labelEl = document.createElement('div');
-            labelEl.className = 'province-label';
-            labelEl.textContent = province.name.split(' ')[0];
-            provinceEl.appendChild(labelEl);
+                const labelEl = document.createElement('div');
+                labelEl.className = 'province-label';
+                labelEl.textContent = province.name.split(' ')[0];
+                provinceEl.appendChild(labelEl);
 
-            // Добавляем проверку на существование countryId
-            if (province.countryId !== null && province.countryId !== undefined) {
-                const country = gameState.countries.find(c => c.id === province.countryId);
-                
-                if (country) {
+                if (province.countryId !== null) {
+                    const country = gameState.countries[province.countryId];
                     provinceEl.style.backgroundColor = country.color;
                     
                     if (province.isCapital) provinceEl.classList.add('capital');
@@ -1529,42 +1487,10 @@ function validateGameData() {
                     if (province.navy > 0) provinceEl.classList.add('navy');
                     if (province.airforce > 0) provinceEl.classList.add('airforce');
                     if (country.id === gameState.playerCountry?.id) provinceEl.classList.add('player');
-                }
-            } else {
-                provinceEl.style.backgroundColor = '#7f8c8d';
-            }
-
-            provinceEl.addEventListener('click', () => selectProvince(province));
-            elements.gameMap.appendChild(provinceEl);
-        } catch (error) {
-            console.error(`Error rendering province ${province.id}:`, error);
-        }
-    });
-}
-                    
-                    if (province.isCapital) {
-                        provinceEl.classList.add('capital');
-                    }
-                    
-                    if (province.army > 0) {
-                        provinceEl.classList.add('army');
-                    }
-                    
-                    if (province.navy > 0) {
-                        provinceEl.classList.add('navy');
-                    }
-                    
-                    if (province.airforce > 0) {
-                        provinceEl.classList.add('airforce');
-                    }
-                    
-                    if (country.id === gameState.playerCountry.id) {
-                        provinceEl.classList.add('player');
-                    }
                 } else {
                     provinceEl.style.backgroundColor = '#7f8c8d';
                 }
-                
+
                 provinceEl.addEventListener('click', () => selectProvince(province));
                 
                 // Add hover tooltip
@@ -1602,40 +1528,18 @@ function validateGameData() {
                 });
                 
                 provinceEl.addEventListener('mousemove', (e) => {
-                    const tooltip = elements.provinceTooltip;
-                    tooltip.style.left = `${e.pageX + 15}px`;
-                    tooltip.style.top = `${e.pageY + 15}px`;
+                    elements.provinceTooltip.style.left = `${e.pageX + 15}px`;
+                    elements.provinceTooltip.style.top = `${e.pageY + 15}px`;
                 });
                 
                 provinceEl.addEventListener('mouseleave', () => {
                     elements.provinceTooltip.style.opacity = '0';
                 });
                 
-                province.element = provinceEl;
                 elements.gameMap.appendChild(provinceEl);
             });
             
-            // Update military counts
             updateMilitaryCounts();
-        }
-
-        // Start game with selected country - ИЗМЕНЕННАЯ ФУНКЦИЯ
-        function startGame() {
-            console.log("Starting game...");
-            
-            if (!gameState.playerCountry) {
-                showNotification("Пожалуйста, выберите страну для игры");
-                return;
-            }
-            
-            elements.countrySelectModal.style.display = 'none';
-            gameState.gameStarted = true;
-            gameState.playerCountry.color = gameState.playerColor;
-            
-            updateUI();
-            showNotification(`Добро пожаловать в Age of History 2! Вы играете за ${gameState.playerCountry.name}.`);
-            
-            console.log(`Game started as ${gameState.playerCountry.name}`);
         }
 
         // Select province
@@ -2354,68 +2258,57 @@ function validateGameData() {
             return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
         }
 
-      // Setup event listeners - ИЗМЕНЕННАЯ ФУНКЦИЯ
+        // Setup event listeners
         function setupEventListeners() {
-            console.log("Setting up event listeners...");
-            
             // Sidebar toggle
-            if (elements.sidebarToggle) {
-                elements.sidebarToggle.addEventListener('click', () => {
-                    elements.sidebar.classList.toggle('sidebar-hidden');
-                });
-            }
+            elements.sidebarToggle.addEventListener('click', () => {
+                elements.sidebar.classList.toggle('sidebar-hidden');
+            });
             
             // Tab buttons
-            if (elements.tabButtons) {
-                elements.tabButtons.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        elements.tabButtons.forEach(b => b.classList.remove('active'));
-                        elements.tabContents.forEach(c => c.classList.remove('active'));
-                        
-                        btn.classList.add('active');
-                        const tabId = btn.getAttribute('data-tab') + '-tab';
-                        document.getElementById(tabId).classList.add('active');
-                    });
+            elements.tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    elements.tabButtons.forEach(b => b.classList.remove('active'));
+                    elements.tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const tabId = btn.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
                 });
-            }
+            });
             
             // Action buttons
-            if (elements.recruitArmyBtn) elements.recruitArmyBtn.addEventListener('click', recruitArmy);
-            if (elements.recruitNavyBtn) elements.recruitNavyBtn.addEventListener('click', recruitNavy);
-            if (elements.recruitAirforceBtn) elements.recruitAirforceBtn.addEventListener('click', recruitAirforce);
-            if (elements.moveUnitsBtn) elements.moveUnitsBtn.addEventListener('click', toggleMoveUnits);
-            if (elements.attackBtn) elements.attackBtn.addEventListener('click', toggleAttack);
-            if (elements.endTurnBtn) elements.endTurnBtn.addEventListener('click', endTurn);
+            elements.recruitArmyBtn.addEventListener('click', recruitArmy);
+            elements.recruitNavyBtn.addEventListener('click', recruitNavy);
+            elements.recruitAirforceBtn.addEventListener('click', recruitAirforce);
+            elements.moveUnitsBtn.addEventListener('click', toggleMoveUnits);
+            elements.attackBtn.addEventListener('click', toggleAttack);
+            elements.endTurnBtn.addEventListener('click', endTurn);
             
             // Battle modal
-            if (elements.closeBattleBtn) elements.closeBattleBtn.addEventListener('click', () => {
+            elements.closeBattleBtn.addEventListener('click', () => {
                 elements.battleModal.classList.remove('active');
             });
             
             // Victory screen
-            if (elements.newGameBtn) elements.newGameBtn.addEventListener('click', newGame);
+            elements.newGameBtn.addEventListener('click', newGame);
             
             // Zoom controls
-            if (elements.zoomIn) elements.zoomIn.addEventListener('click', () => {
+            elements.zoomIn.addEventListener('click', () => {
                 gameState.mapScale *= 1.2;
                 elements.gameMap.style.transform = `scale(${gameState.mapScale})`;
             });
             
-            if (elements.zoomOut) elements.zoomOut.addEventListener('click', () => {
+            elements.zoomOut.addEventListener('click', () => {
                 gameState.mapScale /= 1.2;
                 elements.gameMap.style.transform = `scale(${gameState.mapScale})`;
             });
             
-            // Start game button - ВАЖНОЕ ИЗМЕНЕНИЕ
-            if (elements.startGameBtn) {
-                console.log("Adding event listener to start game button");
-                elements.startGameBtn.addEventListener('click', startGame);
-            } else {
-                console.error("Start game button not found for event listener!");
-            }
+            // Start game button
+            elements.startGameBtn.addEventListener('click', startGame);
             
             // History close button
-            if (elements.historyCloseBtn) elements.historyCloseBtn.addEventListener('click', () => {
+            elements.historyCloseBtn.addEventListener('click', () => {
                 elements.historyModal.classList.remove('active');
             });
             
@@ -2423,13 +2316,10 @@ function validateGameData() {
             window.addEventListener('resize', () => {
                 if (gameState.gameStarted) renderProvinces();
             });
-            
-            console.log("Event listeners setup complete");
         }
 
         // Initialize the game when the page loads
         window.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM fully loaded and parsed");
             initGame();
         });
     </script>
