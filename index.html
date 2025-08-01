@@ -1493,26 +1493,52 @@ function validateGameData() {
 
         // Render provinces on map
         function renderProvinces() {
-            elements.gameMap.innerHTML = '';
-            
-            gameState.provinces.forEach(province => {
-                const provinceEl = document.createElement('div');
-                provinceEl.className = 'province';
-                provinceEl.style.width = `${province.size}px`;
-                provinceEl.style.height = `${province.size}px`;
-                provinceEl.style.left = `${province.x - province.size / 2}px`;
-                provinceEl.style.top = `${province.y - province.size / 2}px`;
-                provinceEl.dataset.provinceId = province.id;
+    if (!elements.gameMap) {
+        console.error("Game map element not found");
+        return;
+    }
+
+    elements.gameMap.innerHTML = '';
+    
+    gameState.provinces.forEach(province => {
+        try {
+            const provinceEl = document.createElement('div');
+            provinceEl.className = 'province';
+            provinceEl.style.width = `${province.size}px`;
+            provinceEl.style.height = `${province.size}px`;
+            provinceEl.style.left = `${province.x - province.size / 2}px`;
+            provinceEl.style.top = `${province.y - province.size / 2}px`;
+            provinceEl.dataset.provinceId = province.id;
+
+            const labelEl = document.createElement('div');
+            labelEl.className = 'province-label';
+            labelEl.textContent = province.name.split(' ')[0];
+            provinceEl.appendChild(labelEl);
+
+            // Добавляем проверку на существование countryId
+            if (province.countryId !== null && province.countryId !== undefined) {
+                const country = gameState.countries.find(c => c.id === province.countryId);
                 
-                // Add label
-                const labelEl = document.createElement('div');
-                labelEl.className = 'province-label';
-                labelEl.textContent = province.name.split(' ')[0];
-                provinceEl.appendChild(labelEl);
-                
-                if (province.countryId !== null) {
-                    const country = gameState.countries[province.countryId];
+                if (country) {
                     provinceEl.style.backgroundColor = country.color;
+                    
+                    if (province.isCapital) provinceEl.classList.add('capital');
+                    if (province.army > 0) provinceEl.classList.add('army');
+                    if (province.navy > 0) provinceEl.classList.add('navy');
+                    if (province.airforce > 0) provinceEl.classList.add('airforce');
+                    if (country.id === gameState.playerCountry?.id) provinceEl.classList.add('player');
+                }
+            } else {
+                provinceEl.style.backgroundColor = '#7f8c8d';
+            }
+
+            provinceEl.addEventListener('click', () => selectProvince(province));
+            elements.gameMap.appendChild(provinceEl);
+        } catch (error) {
+            console.error(`Error rendering province ${province.id}:`, error);
+        }
+    });
+}
                     
                     if (province.isCapital) {
                         provinceEl.classList.add('capital');
