@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Age of History 2 - Русская версия</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet>
     <style>
-        /* ВСЕ СТИЛИ СОХРАНЕНЫ БЕЗ ИЗМЕНЕНИЙ */
         :root {
             --primary-color: #1a1a2e;
             --secondary-color: #16213e;
@@ -36,21 +35,6 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: -1;
         }
 
         header {
@@ -164,9 +148,11 @@
             flex: 1;
             position: relative;
             overflow: hidden;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/1200px-World_map_-_low_resolution.svg.png');
-            background-size: cover;
-            background-position: center;
+            background-color: #1a3a5a;
+            background-image: 
+                linear-gradient(#1a3a5a 1px, transparent 1px),
+                linear-gradient(90deg, #1a3a5a 1px, transparent 1px);
+            background-size: 40px 40px;
             transition: transform 0.2s;
         }
 
@@ -180,14 +166,14 @@
             font-weight: bold;
             font-size: 12px;
             text-shadow: 1px 1px 2px black;
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            background-size: cover;
-            background-position: center;
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .province:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
             z-index: 2;
             filter: brightness(1.2);
         }
@@ -917,6 +903,18 @@
             transition: opacity 0.3s;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
@@ -1009,11 +1007,15 @@
 
             <div class="panel">
                 <div class="panel-title">Действия</div>
-                <button class="btn" id="recruit-army-btn">Нанять армию (10 золота)</button>
-                <button class="btn" id="recruit-navy-btn">Нанять флот (15 золота)</button>
-                <button class="btn" id="recruit-airforce-btn">Нанять авиацию (20 золота)</button>
-                <button class="btn btn-secondary" id="move-units-btn">Переместить войска</button>
-                <button class="btn btn-secondary" id="attack-btn">Атаковать</button>
+                <div class="action-buttons">
+                    <button class="btn" id="recruit-army-btn">Армия (10)</button>
+                    <button class="btn" id="recruit-navy-btn">Флот (15)</button>
+                    <button class="btn" id="recruit-airforce-btn">Авиация (20)</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="move-units-btn">Переместить</button>
+                    <button class="btn btn-secondary" id="attack-btn">Атаковать</button>
+                </div>
                 <button class="btn" id="end-turn-btn">Закончить ход</button>
             </div>
 
