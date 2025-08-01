@@ -1248,19 +1248,45 @@
             provinceTooltip: document.getElementById('province-tooltip')
         };
 
-        // Initialize game
+        // Initialize game - ИЗМЕНЕННАЯ ФУНКЦИЯ
         function initGame() {
-            createCountries();
-            createProvinces();
-            setupEventListeners();
-            renderCountrySelect();
+            console.log("Initializing game..."); // Добавим лог для отладки
             
-            // Show country select modal
-            elements.countrySelectModal.style.display = 'flex';
+            try {
+                createCountries();
+                createProvinces();
+                setupEventListeners();
+                renderCountrySelect();
+                
+                // Показываем модальное окно выбора страны
+                elements.countrySelectModal.style.display = 'flex';
+                console.log("Country select modal should be visible now");
+                
+                // Проверяем, что кнопка существует
+                if (elements.startGameBtn) {
+                    console.log("Start game button found");
+                } else {
+                    console.error("Start game button NOT FOUND!");
+                }
+            } catch (error) {
+                console.error("Error during initialization:", error);
+                showNotification("Ошибка при загрузке игры. Пожалуйста, обновите страницу.");
+            }
         }
 
-        // Create countries
+
+        // Create countries - ИЗМЕНЕННАЯ ФУНКЦИЯ
         function createCountries() {
+            console.log("Creating countries...");
+            
+            // Проверяем, что у нас есть все необходимые данные
+            if (gameState.realCountryNames.length !== 10 || 
+                gameState.realCountryFlags.length !== 10 ||
+                gameState.countryHistories.length !== 10) {
+                console.error("Country data is incomplete!");
+                return;
+            }
+            
             for (let i = 0; i < 10; i++) {
                 const country = {
                     id: i,
@@ -1282,17 +1308,32 @@
                 // Initialize relations
                 for (let j = 0; j < 10; j++) {
                     if (i !== j) {
-                        country.relations[j] = Math.floor(Math.random() * 20) - 10; // -10 to 10
+                        country.relations[j] = Math.floor(Math.random() * 20) - 10;
                     }
                 }
 
                 gameState.countries.push(country);
             }
+            
+            console.log(`Created ${gameState.countries.length} countries`);
         }
 
-        // Render country select screen
+        // Render country select screen - ИЗМЕНЕННАЯ ФУНКЦИЯ
         function renderCountrySelect() {
+            console.log("Rendering country select...");
+            
+            if (!elements.countrySelectGrid) {
+                console.error("Country select grid element not found!");
+                return;
+            }
+            
             elements.countrySelectGrid.innerHTML = '';
+            
+            if (gameState.countries.length === 0) {
+                console.error("No countries to display!");
+                elements.countrySelectGrid.innerHTML = '<p>Ошибка загрузки стран. Пожалуйста, обновите страницу.</p>';
+                return;
+            }
             
             gameState.countries.forEach(country => {
                 const countryEl = document.createElement('div');
@@ -1303,6 +1344,10 @@
                 flagEl.className = 'country-select-flag';
                 flagEl.src = country.flag;
                 flagEl.alt = country.name;
+                flagEl.onerror = function() {
+                    console.error(`Failed to load flag for ${country.name}`);
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA2MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIGZpbGw9IiM3ZjhjOGQiLz48L3N2Zz4=';
+                };
                 
                 const nameEl = document.createElement('div');
                 nameEl.className = 'country-select-name';
@@ -1317,25 +1362,21 @@
                 countryEl.appendChild(difficultyEl);
                 
                 countryEl.addEventListener('click', () => {
-                    // Highlight selected country
                     document.querySelectorAll('.country-select-item').forEach(el => {
                         el.style.borderColor = 'transparent';
                     });
                     countryEl.style.borderColor = 'var(--highlight-color)';
                     
-                    // Set selected country
                     gameState.playerCountry = country;
-                    
-                    // Show history button
                     elements.startGameBtn.textContent = `Играть за ${country.name}`;
-                    
-                    // Show history modal
                     elements.historyText.innerHTML = `<h3>${country.name}</h3><p>${country.history}</p>`;
                     elements.historyModal.classList.add('active');
                 });
                 
                 elements.countrySelectGrid.appendChild(countryEl);
             });
+            
+            console.log(`Rendered ${gameState.countries.length} countries in select screen`);
         }
 
         // Create provinces
@@ -1536,19 +1577,23 @@
             updateMilitaryCounts();
         }
 
-        // Start game with selected country
+        // Start game with selected country - ИЗМЕНЕННАЯ ФУНКЦИЯ
         function startGame() {
+            console.log("Starting game...");
+            
+            if (!gameState.playerCountry) {
+                showNotification("Пожалуйста, выберите страну для игры");
+                return;
+            }
+            
             elements.countrySelectModal.style.display = 'none';
             gameState.gameStarted = true;
-            
-            // Set player color
             gameState.playerCountry.color = gameState.playerColor;
             
-            // Update UI
             updateUI();
-            
-            // Show welcome message
             showNotification(`Добро пожаловать в Age of History 2! Вы играете за ${gameState.playerCountry.name}.`);
+            
+            console.log(`Game started as ${gameState.playerCountry.name}`);
         }
 
         // Select province
@@ -2267,68 +2312,84 @@
             return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
         }
 
-        // Setup event listeners
+      // Setup event listeners - ИЗМЕНЕННАЯ ФУНКЦИЯ
         function setupEventListeners() {
+            console.log("Setting up event listeners...");
+            
             // Sidebar toggle
-            elements.sidebarToggle.addEventListener('click', () => {
-                elements.sidebar.classList.toggle('sidebar-hidden');
-            });
+            if (elements.sidebarToggle) {
+                elements.sidebarToggle.addEventListener('click', () => {
+                    elements.sidebar.classList.toggle('sidebar-hidden');
+                });
+            }
             
             // Tab buttons
-            elements.tabButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    elements.tabButtons.forEach(b => b.classList.remove('active'));
-                    elements.tabContents.forEach(c => c.classList.remove('active'));
-                    
-                    btn.classList.add('active');
-                    const tabId = btn.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).classList.add('active');
+            if (elements.tabButtons) {
+                elements.tabButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        elements.tabButtons.forEach(b => b.classList.remove('active'));
+                        elements.tabContents.forEach(c => c.classList.remove('active'));
+                        
+                        btn.classList.add('active');
+                        const tabId = btn.getAttribute('data-tab') + '-tab';
+                        document.getElementById(tabId).classList.add('active');
+                    });
                 });
-            });
+            }
             
             // Action buttons
-            elements.recruitArmyBtn.addEventListener('click', recruitArmy);
-            elements.recruitNavyBtn.addEventListener('click', recruitNavy);
-            elements.recruitAirforceBtn.addEventListener('click', recruitAirforce);
-            elements.moveUnitsBtn.addEventListener('click', toggleMoveUnits);
-            elements.attackBtn.addEventListener('click', toggleAttack);
-            elements.endTurnBtn.addEventListener('click', endTurn);
+            if (elements.recruitArmyBtn) elements.recruitArmyBtn.addEventListener('click', recruitArmy);
+            if (elements.recruitNavyBtn) elements.recruitNavyBtn.addEventListener('click', recruitNavy);
+            if (elements.recruitAirforceBtn) elements.recruitAirforceBtn.addEventListener('click', recruitAirforce);
+            if (elements.moveUnitsBtn) elements.moveUnitsBtn.addEventListener('click', toggleMoveUnits);
+            if (elements.attackBtn) elements.attackBtn.addEventListener('click', toggleAttack);
+            if (elements.endTurnBtn) elements.endTurnBtn.addEventListener('click', endTurn);
             
             // Battle modal
-            elements.closeBattleBtn.addEventListener('click', () => {
+            if (elements.closeBattleBtn) elements.closeBattleBtn.addEventListener('click', () => {
                 elements.battleModal.classList.remove('active');
             });
             
             // Victory screen
-            elements.newGameBtn.addEventListener('click', newGame);
+            if (elements.newGameBtn) elements.newGameBtn.addEventListener('click', newGame);
             
             // Zoom controls
-            elements.zoomIn.addEventListener('click', () => {
+            if (elements.zoomIn) elements.zoomIn.addEventListener('click', () => {
                 gameState.mapScale *= 1.2;
                 elements.gameMap.style.transform = `scale(${gameState.mapScale})`;
             });
             
-            elements.zoomOut.addEventListener('click', () => {
+            if (elements.zoomOut) elements.zoomOut.addEventListener('click', () => {
                 gameState.mapScale /= 1.2;
                 elements.gameMap.style.transform = `scale(${gameState.mapScale})`;
             });
             
-            // Start game button
-            elements.startGameBtn.addEventListener('click', startGame);
+            // Start game button - ВАЖНОЕ ИЗМЕНЕНИЕ
+            if (elements.startGameBtn) {
+                console.log("Adding event listener to start game button");
+                elements.startGameBtn.addEventListener('click', startGame);
+            } else {
+                console.error("Start game button not found for event listener!");
+            }
             
             // History close button
-            elements.historyCloseBtn.addEventListener('click', () => {
+            if (elements.historyCloseBtn) elements.historyCloseBtn.addEventListener('click', () => {
                 elements.historyModal.classList.remove('active');
             });
             
             // Window resize
             window.addEventListener('resize', () => {
-                renderProvinces();
+                if (gameState.gameStarted) renderProvinces();
             });
+            
+            console.log("Event listeners setup complete");
         }
 
         // Initialize the game when the page loads
-        window.addEventListener('load', initGame);
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded and parsed");
+            initGame();
+        });
     </script>
 </body>
 </html>
