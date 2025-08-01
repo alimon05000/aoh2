@@ -1250,29 +1250,43 @@
 
         // Initialize game - ИЗМЕНЕННАЯ ФУНКЦИЯ
         function initGame() {
-            console.log("Initializing game..."); // Добавим лог для отладки
-            
-            try {
-                createCountries();
-                createProvinces();
-                setupEventListeners();
-                renderCountrySelect();
-                
-                // Показываем модальное окно выбора страны
-                elements.countrySelectModal.style.display = 'flex';
-                console.log("Country select modal should be visible now");
-                
-                // Проверяем, что кнопка существует
-                if (elements.startGameBtn) {
-                    console.log("Start game button found");
-                } else {
-                    console.error("Start game button NOT FOUND!");
-                }
-            } catch (error) {
-                console.error("Error during initialization:", error);
-                showNotification("Ошибка при загрузке игры. Пожалуйста, обновите страницу.");
-            }
+    try {
+        // Проверка данных перед началом
+        if (!validateGameData()) {
+            showNotification("Ошибка данных игры. Пожалуйста, обновите страницу.");
+            return;
         }
+        
+        createCountries();
+        createProvinces();
+        setupEventListeners();
+        renderCountrySelect();
+        elements.countrySelectModal.style.display = 'flex';
+        
+    } catch (error) {
+        console.error("Initialization error:", error);
+        showNotification("Критическая ошибка. Пожалуйста, обновите страницу.");
+    }
+}
+
+// Новая функция проверки данных
+function validateGameData() {
+    const {realCountryNames, realCountryFlags, countryHistories} = gameState;
+    
+    if (realCountryNames.length !== 10 || 
+        realCountryFlags.length !== 10 || 
+        countryHistories.length !== 10) {
+        console.error("Invalid country data length");
+        return false;
+    }
+    
+    if (!elements.countrySelectModal || !elements.startGameBtn) {
+        console.error("Required DOM elements missing");
+        return false;
+    }
+    
+    return true;
+}
 
 
         // Create countries - ИЗМЕНЕННАЯ ФУНКЦИЯ
