@@ -1395,84 +1395,86 @@ function validateGameData() {
 
         // Create provinces
         function createProvinces() {
-            const mapWidth = elements.gameMap.clientWidth;
-            const mapHeight = elements.gameMap.clientHeight;
-            
-            // Create provinces for each country
-            gameState.countries.forEach(country => {
-                const provinceCount = 5 + Math.floor(Math.random() * 3); // 5-7 provinces per country
-                
-                // Create capital
-                const capital = {
-                    id: gameState.provinces.length,
-                    x: Math.floor(Math.random() * (mapWidth - 100) + 50),
-                    y: Math.floor(Math.random() * (mapHeight - 100) + 50),
-                    size: 40 + Math.floor(Math.random() * 20),
-                    name: `${country.name} (столица)`,
-                    countryId: country.id,
-                    isCapital: true,
-                    army: 1 + Math.floor(Math.random() * 2),
-                    navy: country.name === 'Великобритания' || country.name === 'Япония' ? 1 : 0,
-                    airforce: 0,
-                    goldIncome: 3 + Math.floor(Math.random() * 3),
-                    manpowerIncome: 2 + Math.floor(Math.random() * 2),
-                    element: null
-                };
-                
-                gameState.provinces.push(capital);
-                country.provinces.push(capital.id);
-                
-                // Create other provinces around capital
-                for (let i = 1; i < provinceCount; i++) {
-                    const angle = (i / provinceCount) * Math.PI * 2;
-                    const distance = 80 + Math.floor(Math.random() * 60);
-                    
-                    const province = {
-                        id: gameState.provinces.length,
-                        x: Math.max(30, Math.min(mapWidth - 30, capital.x + Math.cos(angle) * distance)),
-                        y: Math.max(30, Math.min(mapHeight - 30, capital.y + Math.sin(angle) * distance)),
-                        size: 30 + Math.floor(Math.random() * 20),
-                        name: `${getProvinceName(country.name)} ${i}`,
-                        countryId: country.id,
-                        isCapital: false,
-                        army: Math.floor(Math.random() * 2),
-                        navy: 0,
-                        airforce: 0,
-                        goldIncome: 1 + Math.floor(Math.random() * 3),
-                        manpowerIncome: 1 + Math.floor(Math.random() * 2),
-                        element: null
-                    };
-                    
-                    gameState.provinces.push(province);
-                    country.provinces.push(province.id);
-                }
-            });
-            
-            // Add some neutral provinces
-            const neutralProvinceCount = 15;
-            for (let i = 0; i < neutralProvinceCount; i++) {
-                const province = {
-                    id: gameState.provinces.length,
-                    x: Math.floor(Math.random() * (mapWidth - 60) + 30),
-                    y: Math.floor(Math.random() * (mapHeight - 60) + 30),
-                    size: 25 + Math.floor(Math.random() * 15),
-                    name: `Нейтральная территория ${i+1}`,
-                    countryId: null,
-                    isCapital: false,
-                    army: 0,
-                    navy: 0,
-                    airforce: 0,
-                    goldIncome: 1 + Math.floor(Math.random() * 2),
-                    manpowerIncome: 1 + Math.floor(Math.random() * 2),
-                    element: null
-                };
-                
-                gameState.provinces.push(province);
-            }
-            
-            renderProvinces();
-        }
+    if (!elements.gameMap) {
+        console.error("Game map element not found");
+        return;
+    }
 
+    const mapWidth = elements.gameMap.clientWidth;
+    const mapHeight = elements.gameMap.clientHeight;
+    
+    // Сначала создаем все страны
+    gameState.countries.forEach(country => {
+        const provinceCount = 5 + Math.floor(Math.random() * 3);
+        
+        const capital = {
+            id: gameState.provinces.length,
+            x: Math.floor(Math.random() * (mapWidth - 100) + 50),
+            y: Math.floor(Math.random() * (mapHeight - 100) + 50),
+            size: 40 + Math.floor(Math.random() * 20),
+            name: `${country.name} (столица)`,
+            countryId: country.id,  // Убедитесь, что country.id существует
+            isCapital: true,
+            army: 1 + Math.floor(Math.random() * 2),
+            navy: ['Великобритания', 'Япония'].includes(country.name) ? 1 : 0,
+            airforce: 0,
+            goldIncome: 3 + Math.floor(Math.random() * 3),
+            manpowerIncome: 2 + Math.floor(Math.random() * 2),
+            element: null
+        };
+        
+        gameState.provinces.push(capital);
+        country.provinces.push(capital.id);
+
+        // Создаем остальные провинции
+        for (let i = 1; i < provinceCount; i++) {
+            const angle = (i / provinceCount) * Math.PI * 2;
+            const distance = 80 + Math.floor(Math.random() * 60);
+            
+            const province = {
+                id: gameState.provinces.length,
+                x: Math.max(30, Math.min(mapWidth - 30, capital.x + Math.cos(angle) * distance)),
+                y: Math.max(30, Math.min(mapHeight - 30, capital.y + Math.sin(angle) * distance)),
+                size: 30 + Math.floor(Math.random() * 20),
+                name: `${getProvinceName(country.name)} ${i}`,
+                countryId: country.id,  // Убедитесь, что country.id существует
+                isCapital: false,
+                army: Math.floor(Math.random() * 2),
+                navy: 0,
+                airforce: 0,
+                goldIncome: 1 + Math.floor(Math.random() * 3),
+                manpowerIncome: 1 + Math.floor(Math.random() * 2),
+                element: null
+            };
+            
+            gameState.provinces.push(province);
+            country.provinces.push(province.id);
+        }
+    });
+    
+    // Добавляем нейтральные провинции
+    for (let i = 0; i < 15; i++) {
+        const province = {
+            id: gameState.provinces.length,
+            x: Math.floor(Math.random() * (mapWidth - 60) + 30),
+            y: Math.floor(Math.random() * (mapHeight - 60) + 30),
+            size: 25 + Math.floor(Math.random() * 15),
+            name: `Нейтральная территория ${i+1}`,
+            countryId: null,  // Явно указываем null для нейтральных территорий
+            isCapital: false,
+            army: 0,
+            navy: 0,
+            airforce: 0,
+            goldIncome: 1 + Math.floor(Math.random() * 2),
+            manpowerIncome: 1 + Math.floor(Math.random() * 2),
+            element: null
+        };
+        
+        gameState.provinces.push(province);
+    }
+    
+    renderProvinces();
+}
         // Generate province name based on country
         function getProvinceName(countryName) {
             const prefixes = {
