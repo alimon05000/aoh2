@@ -3,2328 +3,1201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age of History 2 - Русская версия</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet>
-    
-        <style>
+    <title>Записи чтецов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
         :root {
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
-            --accent-color: #e94560;
-            --text-color: #f1f1f1;
-            --highlight-color: #f9c74f;
-            --army-color: #43aa8b;
-            --navy-color: #577590;
-            --airforce-color: #9b59b6;
-            --diplomacy-war: #e94560;
-            --diplomacy-alliance: #2ecc71;
-            --diplomacy-neutral: #f9c74f;
-            --diplomacy-truce: #3498db;
+            /* Светлая тема */
+            --light-primary: #4285f4;
+            --light-secondary: #34a853;
+            --light-accent: #ea4335;
+            --light-bg: #f8f9fa;
+            --light-card: #ffffff;
+            --light-text: #202124;
+            --light-border: #dadce0;
+
+            /* Темная тема */
+            --dark-primary: #8ab4f8;
+            --dark-secondary: #81c995;
+            --dark-accent: #f28b82;
+            --dark-bg: #202124;
+            --dark-card: #303134;
+            --dark-text: #e8eaed;
+            --dark-border: #5f6368;
+
+            /* Синяя тема */
+            --blue-primary: #1a73e8;
+            --blue-secondary: #188038;
+            --blue-accent: #d93025;
+            --blue-bg: #e8f0fe;
+            --blue-card: #ffffff;
+            --blue-text: #202124;
+            --blue-border: #dadce0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         body {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
         }
 
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
         header {
-            background-color: rgba(22, 33, 62, 0.9);
-            padding: 12px 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.7);
-            z-index: 10;
-            border-bottom: 2px solid var(--accent-color);
         }
 
         .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--highlight-color);
-            font-family: 'Cinzel', serif;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            letter-spacing: 1px;
-        }
-
-        .game-info {
-            display: flex;
-            gap: 15px;
-        }
-
-        .info-box {
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 8px 12px;
-            border-radius: 8px;
-            min-width: 110px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .info-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .info-label {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-bottom: 3px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .info-value {
-            font-weight: bold;
-            color: var(--highlight-color);
-            font-size: 18px;
-        }
-
-        main {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .sidebar {
-            width: 320px;
-            background-color: rgba(22, 33, 62, 0.9);
-            padding: 20px;
-            overflow-y: auto;
-            transition: transform 0.3s ease-out;
-            z-index: 5;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
-            border-right: 1px solid rgba(233, 69, 96, 0.3);
-        }
-
-        .sidebar-hidden {
-            transform: translateX(-100%);
-        }
-
-        .sidebar-toggle {
-            position: absolute;
-            top: 70px;
-            left: 320px;
-            background-color: rgba(22, 33, 62, 0.9);
-            width: 35px;
-            height: 70px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
-            cursor: pointer;
-            z-index: 5;
-            transition: all 0.3s;
-            box-shadow: 3px 0 8px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(233, 69, 96, 0.3);
-            border-left: none;
-            color: var(--highlight-color);
-            font-size: 20px;
+            gap: 10px;
         }
 
-        .sidebar-toggle:hover {
-            background-color: var(--accent-color);
-            color: white;
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
-        .sidebar-hidden + .sidebar-toggle {
-            left: 0;
-        }
-
-        .game-map {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            background-color: #1a3a5a;
-            background-image: 
-                linear-gradient(#1a3a5a 1px, transparent 1px),
-                linear-gradient(90deg, #1a3a5a 1px, transparent 1px);
-            background-size: 40px 40px;
-            transition: transform 0.2s;
-        }
-
-        .province {
-            position: absolute;
-            cursor: pointer;
-            transition: all 0.3s;
+        .theme-switcher {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-            text-shadow: 1px 1px 2px black;
-            border: 1px solid rgba(0, 0, 0, 0.5);
+            gap: 10px;
+        }
+
+        .theme-btn {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .province:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            z-index: 2;
-            filter: brightness(1.2);
-        }
-
-        .province.player {
-            box-shadow: 0 0 15px 5px var(--highlight-color);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 15px 5px var(--highlight-color); }
-            50% { box-shadow: 0 0 20px 8px var(--highlight-color); }
-            100% { box-shadow: 0 0 15px 5px var(--highlight-color); }
-        }
-
-        .province.capital {
-            border: 3px solid gold;
-            animation: capital-pulse 3s infinite;
-        }
-
-        @keyframes capital-pulse {
-            0% { border-color: gold; }
-            50% { border-color: orange; }
-            100% { border-color: gold; }
-        }
-
-        .province.army {
-            border: 2px solid var(--army-color);
-        }
-
-        .province.navy {
-            border: 2px solid var(--navy-color);
-        }
-
-        .province.airforce {
-            border: 2px solid var(--airforce-color);
-        }
-
-        .province-label {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 2px 5px;
-            border-radius: 3px;
-            white-space: nowrap;
-            pointer-events: none;
-        }
-
-        .panel {
-            background-color: rgba(26, 26, 46, 0.8);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .panel-title {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: var(--highlight-color);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 8px;
-            font-family: 'Cinzel', serif;
-            letter-spacing: 1px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--accent-color), #c2334a);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
+            border: 2px solid white;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            margin: 8px 0;
+        }
+
+        .theme-btn.light {
+            background: linear-gradient(135deg, #f8f9fa 50%, #202124 50%);
+        }
+
+        .theme-btn.dark {
+            background-color: #202124;
+        }
+
+        .theme-btn.blue {
+            background-color: #1a73e8;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        /* Reciters Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        .reciters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
+        }
+
+        .reciter-card {
+            background-color: var(--card);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .reciter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .reciter-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .reciter-img img {
             width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn:hover {
-            background: linear-gradient(135deg, #c2334a, var(--accent-color));
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary-color), #111a33);
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #111a33, var(--secondary-color));
-        }
-
-        .btn-disabled {
-            background: #666;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .btn-disabled:hover {
-            transform: none;
-            background: #666;
-        }
-
-        .resource-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 12px 0;
-            padding: 8px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            transition: all 0.2s;
-        }
-
-        .resource-item:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: translateX(5px);
-        }
-
-        .resource-name {
-            font-weight: bold;
-        }
-
-        .resource-value {
-            color: var(--highlight-color);
-            font-weight: bold;
-        }
-
-        .country-flag {
-            width: 32px;
-            height: 22px;
-            margin-right: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        .country-item {
+        .reciter-card:hover .reciter-img img {
+            transform: scale(1.05);
+        }
+
+        .reciter-info {
+            padding: 15px;
+        }
+
+        .reciter-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .reciter-info p {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* Records Section */
+        .records-container {
+            background-color: var(--card);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease, margin 0.5s ease;
+        }
+
+        .records-container.active {
+            max-height: 1000px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .record-item {
             display: flex;
             align-items: center;
             padding: 10px;
-            margin: 8px 0;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
         }
 
-        .country-item:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: translateX(5px);
+        .record-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
-        .country-item.player {
-            background-color: rgba(249, 199, 79, 0.2);
-            border-left: 4px solid var(--highlight-color);
-        }
-
-        .country-item.at-war {
-            border-left: 4px solid var(--diplomacy-war);
-        }
-
-        .country-item.allied {
-            border-left: 4px solid var(--diplomacy-alliance);
-        }
-
-        .country-item.neutral {
-            border-left: 4px solid var(--diplomacy-neutral);
-        }
-
-        .country-item.truce {
-            border-left: 4px solid var(--diplomacy-truce);
-        }
-
-        .country-name {
+        .record-info {
             flex: 1;
-            font-weight: 500;
         }
 
-        .country-power {
-            color: var(--highlight-color);
-            font-weight: bold;
-            min-width: 40px;
-            text-align: right;
+        .record-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--primary);
         }
 
-        .diplomacy-option {
+        .record-info p {
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .record-controls {
             display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .play-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background-color: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        /* Add Record Form */
+        .add-record-form {
+            background-color: var(--card);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .add-record-form h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: var(--card);
+            color: var(--text);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-upload-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .file-upload-btn:hover {
+            background-color: var(--secondary);
+        }
+
+        .file-name {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
         }
 
         .tab-buttons {
             display: flex;
             margin-bottom: 15px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 10px;
-            background-color: transparent;
+            padding: 10px 15px;
+            background: none;
             border: none;
-            color: var(--text-color);
+            border-bottom: 3px solid transparent;
             cursor: pointer;
-            transition: all 0.3s;
+            color: var(--text);
             font-weight: 500;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-
-        .tab-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
         }
 
         .tab-btn.active {
-            background-color: var(--accent-color);
-            font-weight: bold;
+            border-bottom-color: var(--primary);
+            color: var(--primary);
         }
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .unit-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            padding: 8px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            transition: all 0.2s;
-        }
-
-        .unit-item:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: translateX(5px);
-        }
-
-        .unit-type {
-            font-weight: bold;
-        }
-
-        .unit-count {
-            color: var(--highlight-color);
-            font-weight: bold;
-        }
-
-        .notification {
+        /* Audio Player */
+        .audio-player {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            transform: translateX(200%);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            z-index: 100;
-            max-width: 350px;
-            border-left: 5px solid white;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .war-icon {
-            color: var(--diplomacy-war);
-            margin-left: 5px;
-        }
-
-        .peace-icon {
-            color: var(--diplomacy-alliance);
-            margin-left: 5px;
-        }
-
-        .battle-modal {
-            position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s;
+            gap: 20px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
         }
 
-        .battle-modal.active {
-            opacity: 1;
-            pointer-events: all;
+        .audio-player.active {
+            transform: translateY(0);
         }
 
-        .battle-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 30px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 700px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--accent-color);
-            animation: battleEnter 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        .player-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        @keyframes battleEnter {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .battle-title {
-            color: var(--accent-color);
-            margin-bottom: 25px;
-            font-size: 32px;
-            font-family: 'Cinzel', serif;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .battle-armies {
-            display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-        }
-
-        .battle-army {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            padding: 20px;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-
-        .battle-army:hover {
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        .battle-flag {
-            width: 80px;
-            height: 50px;
-            border: 3px solid white;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .player-img img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
 
-        .battle-army-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .battle-army-power {
-            color: var(--highlight-color);
-            font-weight: bold;
-        }
-
-        .battle-vs {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin: 0 20px;
-        }
-
-        .battle-result {
-            margin-top: 30px;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--highlight-color);
-            padding: 15px;
-            border-radius: 8px;
-            background-color: rgba(0, 0, 0, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .battle-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-        }
-
-        .battle-stat {
-            text-align: center;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
+        .player-info {
             flex: 1;
-            margin: 0 10px;
         }
 
-        .battle-stat:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: translateY(-5px);
-        }
-
-        .battle-stat-title {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #aaa;
-        }
-
-        .battle-stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--highlight-color);
-        }
-
-        .end-turn-btn {
-            margin-top: 30px;
-            padding: 12px 25px;
-            font-size: 18px;
-            background: linear-gradient(135deg, var(--highlight-color), #e6b422);
-            color: #333;
-        }
-
-        .end-turn-btn:hover {
-            background: linear-gradient(135deg, #e6b422, var(--highlight-color));
-        }
-
-        .victory-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, rgba(26,26,46,0.9) 0%, rgba(0,0,0,0.95) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 300;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1s;
-        }
-
-        .victory-screen.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .victory-title {
-            font-size: 72px;
-            color: gold;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            font-family: 'Cinzel', serif;
-            letter-spacing: 3px;
-            animation: victoryPulse 3s infinite;
-        }
-
-        @keyframes victoryPulse {
-            0% { transform: scale(1); text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-            50% { transform: scale(1.1); text-shadow: 0 0 30px rgba(255, 215, 0, 1); }
-            100% { transform: scale(1); text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-        }
-
-        .victory-text {
-            font-size: 28px;
-            margin-bottom: 40px;
-            text-align: center;
-            max-width: 700px;
-            line-height: 1.5;
-        }
-
-        .victory-stats {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .victory-stat {
-            text-align: center;
-        }
-
-        .victory-stat-value {
-            font-size: 36px;
-            font-weight: bold;
-            color: gold;
+        .player-info h4 {
+            font-size: 1rem;
             margin-bottom: 5px;
         }
 
-        .victory-stat-label {
-            font-size: 18px;
-            color: #ccc;
+        .player-info p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        .zoom-controls {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 5;
-        }
-
-        .zoom-btn {
-            width: 50px;
-            height: 50px;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
+        .player-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 15px;
         }
 
-        .zoom-btn:hover {
-            background-color: var(--accent-color);
+        .player-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .player-btn:hover {
+            color: var(--accent);
             transform: scale(1.1);
         }
 
-        .history-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 400;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s;
+        .play-pause-btn {
+            font-size: 1.5rem;
         }
 
-        .history-modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .history-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 30px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--highlight-color);
-        }
-
-        .history-title {
-            color: var(--highlight-color);
-            margin-bottom: 20px;
-            font-size: 32px;
-            font-family: 'Cinzel', serif;
-            text-align: center;
-            border-bottom: 2px solid var(--highlight-color);
-            padding-bottom: 10px;
-        }
-
-        .history-text {
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .history-close-btn {
-            background: linear-gradient(135deg, var(--highlight-color), #e6b422);
-            color: #333;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .history-close-btn:hover {
-            background: linear-gradient(135deg, #e6b422, var(--highlight-color));
-            transform: translateY(-2px);
-        }
-
-        .country-select-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-        }
-
-        .country-select-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 30px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 900px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            border: 2px solid var(--highlight-color);
-            text-align: center;
-        }
-
-        .country-select-title {
-            color: var(--highlight-color);
-            margin-bottom: 30px;
-            font-size: 32px;
-            font-family: 'Cinzel', serif;
-        }
-
-        .country-select-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .country-select-item {
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .country-select-item:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: translateY(-5px);
-            border-color: var(--highlight-color);
-        }
-
-        .country-select-flag {
-            width: 60px;
-            height: 40px;
-            border: 2px solid white;
-            margin-bottom: 10px;
-            object-fit: cover;
-        }
-
-        .country-select-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .country-select-difficulty {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        .country-select-btn {
-            background: linear-gradient(135deg, var(--highlight-color), #e6b422);
-            color: #333;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-            transition: all 0.3s;
-            margin-top: 20px;
-        }
-
-        .country-select-btn:hover {
-            background: linear-gradient(135deg, #e6b422, var(--highlight-color));
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 14px;
-            pointer-events: none;
-            z-index: 1000;
-            max-width: 300px;
-            border-left: 3px solid var(--highlight-color);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .action-buttons button {
+        .progress-container {
             flex: 1;
-            padding: 8px;
-            font-size: 12px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 15px;
         }
 
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 5px;
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-container:hover .progress-bar::after {
+            opacity: 1;
+        }
+
+        .time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .close-player {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--card);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-50px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        /* Responsive Styles */
         @media (max-width: 768px) {
-            .sidebar {
-                position: absolute;
-                height: 100%;
-                width: 280px;
+            .reciters-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
             }
-
-            .game-info {
-                gap: 8px;
+            
+            .audio-player {
+                flex-wrap: wrap;
+                padding: 10px;
             }
-
-            .info-box {
-                min-width: 80px;
-                padding: 6px;
+            
+            .player-controls {
+                order: 1;
+                width: 100%;
+                margin-top: 10px;
             }
-
-            .logo {
-                font-size: 20px;
+            
+            .progress-container {
+                margin: 10px 0;
             }
+        }
 
-            .panel-title {
-                font-size: 18px;
+        @media (max-width: 576px) {
+            .reciters-grid {
+                grid-template-columns: 1fr;
             }
-
-            .battle-content {
-                width: 95%;
-                padding: 20px;
-            }
-
-            .country-select-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="country-select-modal" id="country-select-modal">
-        <div class="country-select-content">
-            <h1 class="country-select-title">Выберите страну</h1>
-            <p style="margin-bottom: 20px;">Выберите страну, которой будете управлять в этой игре</p>
-            
-            <div class="country-select-grid" id="country-select-grid">
-                <!-- Countries will be added here dynamically -->
-            </div>
-            
-            <button class="country-select-btn" id="start-game-btn">Начать игру</button>
-        </div>
-    </div>
-
-    <div class="history-modal" id="history-modal">
-        <div class="history-content">
-            <h1 class="history-title">История страны</h1>
-            <div class="history-text" id="history-text">
-                <!-- History text will be added here dynamically -->
-            </div>
-            <button class="history-close-btn" id="history-close-btn">Закрыть</button>
-        </div>
-    </div>
-
+    <!-- Header -->
     <header>
-        <div class="logo">AGE OF HISTORY 2</div>
-        <div class="game-info">
-            <div class="info-box">
-                <div class="info-label">Ход</div>
-                <div class="info-value" id="turn-counter">1</div>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-text">Записи чтецов</div>
             </div>
-            <div class="info-box">
-                <div class="info-label">Золото</div>
-                <div class="info-value" id="gold-counter">100</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">Ресурсы</div>
-                <div class="info-value" id="manpower-counter">50</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">Провинции</div>
-                <div class="info-value" id="provinces-counter">1</div>
+            <div class="theme-switcher">
+                <button class="theme-btn light" data-theme="light"></button>
+                <button class="theme-btn dark" data-theme="dark"></button>
+                <button class="theme-btn blue" data-theme="blue"></button>
             </div>
         </div>
     </header>
 
-    <main>
-        <div class="sidebar" id="sidebar">
-            <div class="panel">
-                <div class="panel-title" id="selected-province-name">Выберите провинцию</div>
-                <div id="province-info">
-                    <p>Кликните на провинцию, чтобы увидеть детали</p>
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Featured Reciters -->
+        <section class="featured-reciters">
+            <div class="section-title">
+                <h2>Чтецы Корана</h2>
+            </div>
+            <div class="reciters-grid">
+                <!-- Reciter 1 -->
+                <div class="reciter-card" data-reciter="lyukhaidan">
+                    <div class="reciter-img">
+                        <img src="https://via.placeholder.com/300x200?text=Люхайдан" alt="Люхайдан">
+                    </div>
+                    <div class="reciter-info">
+                        <h3>Люхайдан</h3>
+                        <p>Количество записей: <span class="record-count">0</span></p>
+                    </div>
+                    <div class="records-container" id="lyukhaidan-records"></div>
+                </div>
+
+                <!-- Reciter 2 -->
+                <div class="reciter-card" data-reciter="dausari">
+                    <div class="reciter-img">
+                        <img src="https://via.placeholder.com/300x200?text=Даусари" alt="Даусари">
+                    </div>
+                    <div class="reciter-info">
+                        <h3>Даусари</h3>
+                        <p>Количество записей: <span class="record-count">0</span></p>
+                    </div>
+                    <div class="records-container" id="dausari-records"></div>
+                </div>
+
+                <!-- Reciter 3 -->
+                <div class="reciter-card" data-reciter="sildinsky">
+                    <div class="reciter-img">
+                        <img src="https://via.placeholder.com/300x200?text=Сильдинский" alt="Сильдинский">
+                    </div>
+                    <div class="reciter-info">
+                        <h3>Сильдинский</h3>
+                        <p>Количество записей: <span class="record-count">0</span></p>
+                    </div>
+                    <div class="records-container" id="sildinsky-records"></div>
+                </div>
+
+                <!-- Reciter 4 -->
+                <div class="reciter-card" data-reciter="mishari-rashid">
+                    <div class="reciter-img">
+                        <img src="https://via.placeholder.com/300x200?text=Мишари+Рашид" alt="Мишари Рашид">
+                    </div>
+                    <div class="reciter-info">
+                        <h3>Мишари Рашид</h3>
+                        <p>Количество записей: <span class="record-count">0</span></p>
+                    </div>
+                    <div class="records-container" id="mishari-rashid-records"></div>
                 </div>
             </div>
+        </section>
 
-            <div class="panel">
-                <div class="panel-title">Действия</div>
-                <div class="action-buttons">
-                    <button class="btn" id="recruit-army-btn">Армия (10)</button>
-                    <button class="btn" id="recruit-navy-btn">Флот (15)</button>
-                    <button class="btn" id="recruit-airforce-btn">Авиация (20)</button>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn btn-secondary" id="move-units-btn">Переместить</button>
-                    <button class="btn btn-secondary" id="attack-btn">Атаковать</button>
-                </div>
-                <button class="btn" id="end-turn-btn">Закончить ход</button>
+        <!-- Add Record Form -->
+        <section class="add-record-form">
+            <h3><i class="fas fa-plus-circle"></i> Добавить новую запись</h3>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="link-tab">Ссылка</button>
+                <button class="tab-btn" data-tab="file-tab">Файл</button>
+                <button class="tab-btn" data-tab="telegram-tab">Telegram</button>
+                <button class="tab-btn" data-tab="youtube-tab">YouTube</button>
             </div>
-
-            <div class="panel">
-                <div class="tab-buttons">
-                    <button class="tab-btn active" data-tab="resources">Ресурсы</button>
-                    <button class="tab-btn" data-tab="diplomacy">Дипломатия</button>
-                    <button class="tab-btn" data-tab="military">Армия</button>
+            
+            <form id="recordForm">
+                <div class="form-group">
+                    <label for="reciter">Чтец</label>
+                    <select id="reciter" required>
+                        <option value="">Выберите чтеца</option>
+                        <option value="lyukhaidan">Люхайдан</option>
+                        <option value="dausari">Даусари</option>
+                        <option value="sildinsky">Сильдинский</option>
+                        <option value="mishari-rashid">Мишари Рашид</option>
+                    </select>
                 </div>
-
-                <div class="tab-content active" id="resources-tab">
-                    <div class="resource-item">
-                        <span class="resource-name">Доход золота:</span>
-                        <span class="resource-value" id="gold-income">+5</span>
-                    </div>
-                    <div class="resource-item">
-                        <span class="resource-name">Доход ресурсов:</span>
-                        <span class="resource-value" id="manpower-income">+2</span>
-                    </div>
-                    <div class="resource-item">
-                        <span class="resource-name">Очки исследований:</span>
-                        <span class="resource-value" id="research-points">0</span>
-                    </div>
-                    <div class="resource-item">
-                        <span class="resource-name">Уровень технологий:</span>
-                        <span class="resource-value" id="tech-level">1</span>
-                    </div>
+                <div class="form-group">
+                    <label for="title">Название записи</label>
+                    <input type="text" id="title" placeholder="Введите название записи" required>
                 </div>
-
-                <div class="tab-content" id="diplomacy-tab">
-                    <div id="countries-list">
-                        <!-- Countries will be added here dynamically -->
+                <div class="form-group">
+                    <label for="description">Описание</label>
+                    <textarea id="description" placeholder="Добавьте описание записи"></textarea>
+                </div>
+                
+                <!-- Link Tab -->
+                <div class="tab-content active" id="link-tab">
+                    <div class="form-group">
+                        <label for="audioUrl">Ссылка на аудио</label>
+                        <input type="url" id="audioUrl" placeholder="https://example.com/audio.mp3">
                     </div>
                 </div>
-
-                <div class="tab-content" id="military-tab">
-                    <div class="unit-item">
-                        <span class="unit-type">Армии:</span>
-                        <span class="unit-count" id="army-count">0</span>
-                    </div>
-                    <div class="unit-item">
-                        <span class="unit-type">Флоты:</span>
-                        <span class="unit-count" id="navy-count">0</span>
-                    </div>
-                    <div class="unit-item">
-                        <span class="unit-type">Авиация:</span>
-                        <span class="unit-count" id="airforce-count">0</span>
-                    </div>
-                    <div class="unit-item">
-                        <span class="unit-type">Общая мощь:</span>
-                        <span class="unit-count" id="total-power">0</span>
+                
+                <!-- File Tab -->
+                <div class="tab-content" id="file-tab">
+                    <div class="form-group">
+                        <label>Загрузить аудиофайл</label>
+                        <div class="file-upload">
+                            <label for="audioFile" class="file-upload-btn">
+                                <span class="file-upload-btn">Выбрать файл</span>
+                                <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+                            </label>
+                            <span class="file-name" id="fileName">Файл не выбран</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="sidebar-toggle" id="sidebar-toggle">≡</div>
-
-        <div class="game-map" id="game-map">
-            <!-- Provinces will be added here dynamically -->
-            <div class="tooltip" id="province-tooltip"></div>
-        </div>
-
-        <div class="zoom-controls">
-            <button class="zoom-btn" id="zoom-in">+</button>
-            <button class="zoom-btn" id="zoom-out">-</button>
-        </div>
+                
+                <!-- Telegram Tab -->
+                <div class="tab-content" id="telegram-tab">
+                    <div class="form-group">
+                        <label for="telegramLink">Ссылка на Telegram аудио</label>
+                        <input type="url" id="telegramLink" placeholder="https://t.me/audio_file">
+                        <p class="help-text">Вставьте ссылку на аудиофайл из Telegram</p>
+                    </div>
+                </div>
+                
+                <!-- YouTube Tab -->
+                <div class="tab-content" id="youtube-tab">
+                    <div class="form-group">
+                        <label for="youtubeLink">Ссылка на YouTube</label>
+                        <input type="url" id="youtubeLink" placeholder="https://youtu.be/...">
+                        <p class="help-text">Вставьте ссылку на YouTube видео</p>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Добавить запись</button>
+            </form>
+        </section>
     </main>
 
-    <div class="notification" id="notification">
-        <div id="notification-message">Сообщение</div>
+    <!-- Audio Player -->
+    <div class="audio-player" id="audioPlayer">
+        <div class="player-img">
+            <img src="https://via.placeholder.com/60x60?text=Запись" alt="Now Playing">
+        </div>
+        <div class="player-info">
+            <h4>Название записи</h4>
+            <p>Чтец</p>
+        </div>
+        <div class="player-controls">
+            <button class="player-btn play-pause-btn"><i class="fas fa-play"></i></button>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="time">00:00 / 00:00</div>
+            <button class="player-btn"><i class="fas fa-volume-up"></i></button>
+        </div>
+        <button class="close-player" id="closePlayer">
+            <i class="fas fa-times"></i>
+        </button>
+        <audio id="mainAudio"></audio>
     </div>
 
-    <div class="battle-modal" id="battle-modal">
-        <div class="battle-content">
-            <h2 class="battle-title">БОЕВОЙ ОТЧЕТ</h2>
-            <div class="battle-armies">
-                <div class="battle-army">
-                    <img class="battle-flag" id="attacker-flag" src="" alt="Атакующий">
-                    <div class="battle-army-name" id="attacker-name">Атакующий</div>
-                    <div class="battle-army-power" id="attacker-power">Сила: 0</div>
-                </div>
-                <div class="battle-vs">VS</div>
-                <div class="battle-army">
-                    <img class="battle-flag" id="defender-flag" src="" alt="Защитник">
-                    <div class="battle-army-name" id="defender-name">Защитник</div>
-                    <div class="battle-army-power" id="defender-power">Сила: 0</div>
-                </div>
+    <!-- File Upload Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Загрузка файла</h3>
+                <button class="close-modal" id="closeUploadModal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="battle-result" id="battle-result">ПОБЕДА!</div>
-            <div class="battle-stats">
-                <div class="battle-stat">
-                    <div class="battle-stat-title">Потери атакующего</div>
-                    <div class="battle-stat-value" id="attacker-losses">0</div>
+            <div class="modal-body">
+                <div id="uploadProgress">
+                    <p>Идет загрузка файла...</p>
+                    <progress value="0" max="100" id="progressBar"></progress>
+                    <p id="progressText">0%</p>
                 </div>
-                <div class="battle-stat">
-                    <div class="battle-stat-title">Потери защитника</div>
-                    <div class="battle-stat-value" id="defender-losses">0</div>
+                <div id="uploadResult" style="display: none;">
+                    <p id="resultMessage"></p>
+                    <button id="copyLinkBtn" class="submit-btn" style="margin-top: 15px;">Копировать ссылку</button>
                 </div>
-            </div>
-            <button class="btn end-turn-btn" id="close-battle-btn">Продолжить</button>
-        </div>
-    </div>
-
-    <div class="victory-screen" id="victory-screen">
-        <h1 class="victory-title" id="victory-title">ПОБЕДА!</h1>
-        <p class="victory-text" id="victory-text">Вы завоевали мир за X ходов!</p>
-        <div class="victory-stats">
-            <div class="victory-stat">
-                <div class="victory-stat-value" id="victory-turns">0</div>
-                <div class="victory-stat-label">Ходов</div>
-            </div>
-            <div class="victory-stat">
-                <div class="victory-stat-value" id="victory-provinces">0</div>
-                <div class="victory-stat-label">Провинций</div>
-            </div>
-            <div class="victory-stat">
-                <div class="victory-stat-value" id="victory-army">0</div>
-                <div class="victory-stat-label">Армия</div>
             </div>
         </div>
-        <button class="btn" id="new-game-btn">Новая игра</button>
     </div>
 
     <script>
-        // Game state
-        const gameState = {
-            turn: 1,
-            playerCountry: null,
-            countries: [],
-            provinces: [],
-            selectedProvince: null,
-            gold: 100,
-            manpower: 50,
-            gameMap: null,
-            mapScale: 1,
-            movingUnits: false,
-            attacking: false,
-            sourceProvince: null,
-            playerColor: '#f9c74f',
-            colors: [
-                '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c',
-                '#d35400', '#34495e', '#16a085', '#c0392b', '#8e44ad'
-            ],
-            realCountryNames: [
-                'Россия', 'США', 'Китай', 'Германия', 'Франция',
-                'Великобритания', 'Япония', 'Индия', 'Бразилия', 'Италия'
-            ],
-            realCountryFlags: [
-                'https://flagcdn.com/w80/ru.png',
-                'https://flagcdn.com/w80/us.png',
-                'https://flagcdn.com/w80/cn.png',
-                'https://flagcdn.com/w80/de.png',
-                'https://flagcdn.com/w80/fr.png',
-                'https://flagcdn.com/w80/gb.png',
-                'https://flagcdn.com/w80/jp.png',
-                'https://flagcdn.com/w80/in.png',
-                'https://flagcdn.com/w80/br.png',
-                'https://flagcdn.com/w80/it.png'
-            ],
-            countryHistories: [
-                'Россия - крупнейшее государство в мире, обладающее богатой историей и культурой. На протяжении веков Россия играла ключевую роль в мировой политике. Сегодня перед вами стоит задача расширить влияние России и укрепить её позиции на мировой арене.',
-                'США - мировая сверхдержава с мощной экономикой и армией. Основанная в 1776 году, страна прошла путь от британской колонии до лидера свободного мира. Ваша задача - сохранить и приумножить влияние США в мире.',
-                'Китай - древняя цивилизация с быстрорастущей экономикой и амбициозными планами. С населением более 1.4 миллиарда человек Китай является самой населённой страной мира. Вам предстоит вести Китай к мировому господству.',
-                'Германия - экономический двигатель Европы с мощной промышленностью и технологиями. После сложного XX века Германия восстановила своё влияние. Ваша задача - укрепить позиции Германии в Европе и мире.',
-                'Франция - страна с богатой историей и культурой, ядерная держава и постоянный член Совета Безопасности ООН. Франция всегда играла важную роль в европейской и мировой политике. Вам предстоит продолжить эту традицию.',
-                'Великобритания - островное государство с глобальным влиянием, бывшая империя, над которой "никогда не заходило солнце". Несмотря на потерю колоний, Великобритания остаётся важным игроком на мировой арене.',
-                'Япония - технологически развитая островная нация с уникальной культурой. После поражения во Второй мировой войне Япония сосредоточилась на экономическом развитии. Ваша задача - вернуть Японии военную мощь и влияние.',
-                'Индия - древняя цивилизация и самая большая демократия в мире. С быстрорастущей экономикой и населением Индия становится всё более влиятельной. Вам предстоит вести Индию к статусу сверхдержавы.',
-                'Бразилия - крупнейшая страна Южной Америки с богатыми природными ресурсами. Известная своими карнавалами и футболом, Бразилия имеет потенциал стать глобальным лидером. Ваша задача - реализовать этот потенциал.',
-                'Италия - страна с богатейшим культурным наследием, родина Римской империи. Несмотря на экономические проблемы, Италия остаётся важной европейской страной. Вам предстоит возродить былое величие Италии.'
-            ],
-            notifications: [],
-            gameStarted: false
-        };
-
-        // DOM elements
-        const elements = {
-            sidebar: document.getElementById('sidebar'),
-            sidebarToggle: document.getElementById('sidebar-toggle'),
-            gameMap: document.getElementById('game-map'),
-            turnCounter: document.getElementById('turn-counter'),
-            goldCounter: document.getElementById('gold-counter'),
-            manpowerCounter: document.getElementById('manpower-counter'),
-            provincesCounter: document.getElementById('provinces-counter'),
-            selectedProvinceName: document.getElementById('selected-province-name'),
-            provinceInfo: document.getElementById('province-info'),
-            recruitArmyBtn: document.getElementById('recruit-army-btn'),
-            recruitNavyBtn: document.getElementById('recruit-navy-btn'),
-            recruitAirforceBtn: document.getElementById('recruit-airforce-btn'),
-            moveUnitsBtn: document.getElementById('move-units-btn'),
-            attackBtn: document.getElementById('attack-btn'),
-            endTurnBtn: document.getElementById('end-turn-btn'),
-            goldIncome: document.getElementById('gold-income'),
-            manpowerIncome: document.getElementById('manpower-income'),
-            researchPoints: document.getElementById('research-points'),
-            techLevel: document.getElementById('tech-level'),
-            countriesList: document.getElementById('countries-list'),
-            armyCount: document.getElementById('army-count'),
-            navyCount: document.getElementById('navy-count'),
-            airforceCount: document.getElementById('airforce-count'),
-            totalPower: document.getElementById('total-power'),
-            tabButtons: document.querySelectorAll('.tab-btn'),
-            tabContents: document.querySelectorAll('.tab-content'),
-            notification: document.getElementById('notification'),
-            notificationMessage: document.getElementById('notification-message'),
-            battleModal: document.getElementById('battle-modal'),
-            attackerFlag: document.getElementById('attacker-flag'),
-            attackerName: document.getElementById('attacker-name'),
-            attackerPower: document.getElementById('attacker-power'),
-            defenderFlag: document.getElementById('defender-flag'),
-            defenderName: document.getElementById('defender-name'),
-            defenderPower: document.getElementById('defender-power'),
-            battleResult: document.getElementById('battle-result'),
-            attackerLosses: document.getElementById('attacker-losses'),
-            defenderLosses: document.getElementById('defender-losses'),
-            closeBattleBtn: document.getElementById('close-battle-btn'),
-            victoryScreen: document.getElementById('victory-screen'),
-            victoryTitle: document.getElementById('victory-title'),
-            victoryText: document.getElementById('victory-text'),
-            victoryTurns: document.getElementById('victory-turns'),
-            victoryProvinces: document.getElementById('victory-provinces'),
-            victoryArmy: document.getElementById('victory-army'),
-            newGameBtn: document.getElementById('new-game-btn'),
-            zoomIn: document.getElementById('zoom-in'),
-            zoomOut: document.getElementById('zoom-out'),
-            countrySelectModal: document.getElementById('country-select-modal'),
-            countrySelectGrid: document.getElementById('country-select-grid'),
-            startGameBtn: document.getElementById('start-game-btn'),
-            historyModal: document.getElementById('history-modal'),
-            historyText: document.getElementById('history-text'),
-            historyCloseBtn: document.getElementById('history-close-btn'),
-            provinceTooltip: document.getElementById('province-tooltip')
-        };
-
-        // Initialize game
-        function initGame() {
-            createCountries();
-            setupEventListeners();
-            renderCountrySelect();
-            elements.countrySelectModal.style.display = 'flex';
-        }
-
-        // Create countries
-        function createCountries() {
-            gameState.countries = [];
+        // Текущая тема (по умолчанию светлая)
+        let currentTheme = 'light';
+        
+        // Применяем выбранную тему
+        function applyTheme(theme) {
+            currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
             
-            for (let i = 0; i < 10; i++) {
-                const country = {
-                    id: i,
-                    name: gameState.realCountryNames[i],
-                    color: gameState.colors[i],
-                    flag: gameState.realCountryFlags[i],
-                    history: gameState.countryHistories[i],
-                    gold: 100 + Math.floor(Math.random() * 50),
-                    manpower: 50 + Math.floor(Math.random() * 30),
-                    provinces: [],
-                    armies: 0,
-                    navies: 0,
-                    airforces: 0,
-                    relations: {},
-                    atWarWith: [],
-                    difficulty: ['Легко', 'Средне', 'Сложно'][Math.floor(Math.random() * 3)]
-                };
-
-                // Initialize relations
-                for (let j = 0; j < 10; j++) {
-                    if (i !== j) {
-                        country.relations[j] = Math.floor(Math.random() * 20) - 10;
-                    }
-                }
-
-                gameState.countries.push(country);
+            // Устанавливаем CSS переменные в зависимости от темы
+            const root = document.documentElement;
+            
+            if (theme === 'light') {
+                root.style.setProperty('--primary', 'var(--light-primary)');
+                root.style.setProperty('--secondary', 'var(--light-secondary)');
+                root.style.setProperty('--accent', 'var(--light-accent)');
+                root.style.setProperty('--bg', 'var(--light-bg)');
+                root.style.setProperty('--card', 'var(--light-card)');
+                root.style.setProperty('--text', 'var(--light-text)');
+                root.style.setProperty('--border', 'var(--light-border)');
+            } else if (theme === 'dark') {
+                root.style.setProperty('--primary', 'var(--dark-primary)');
+                root.style.setProperty('--secondary', 'var(--dark-secondary)');
+                root.style.setProperty('--accent', 'var(--dark-accent)');
+                root.style.setProperty('--bg', 'var(--dark-bg)');
+                root.style.setProperty('--card', 'var(--dark-card)');
+                root.style.setProperty('--text', 'var(--dark-text)');
+                root.style.setProperty('--border', 'var(--dark-border)');
+            } else if (theme === 'blue') {
+                root.style.setProperty('--primary', 'var(--blue-primary)');
+                root.style.setProperty('--secondary', 'var(--blue-secondary)');
+                root.style.setProperty('--accent', 'var(--blue-accent)');
+                root.style.setProperty('--bg', 'var(--blue-bg)');
+                root.style.setProperty('--card', 'var(--blue-card)');
+                root.style.setProperty('--text', 'var(--blue-text)');
+                root.style.setProperty('--border', 'var(--blue-border)');
             }
-        }
-
-        // Render country select screen
-        function renderCountrySelect() {
-            elements.countrySelectGrid.innerHTML = '';
             
-            gameState.countries.forEach(country => {
-                const countryEl = document.createElement('div');
-                countryEl.className = 'country-select-item';
-                countryEl.dataset.countryId = country.id;
-                
-                const flagEl = document.createElement('img');
-                flagEl.className = 'country-select-flag';
-                flagEl.src = country.flag;
-                flagEl.alt = country.name;
-                flagEl.onerror = function() {
-                    this.onerror = null;
-                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA2MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIGZpbGw9IiM3ZjhjOGQiLz48L3N2Zz4=';
-                };
-                
-                const nameEl = document.createElement('div');
-                nameEl.className = 'country-select-name';
-                nameEl.textContent = country.name;
-                
-                const difficultyEl = document.createElement('div');
-                difficultyEl.className = 'country-select-difficulty';
-                difficultyEl.textContent = `Сложность: ${country.difficulty}`;
-                
-                countryEl.appendChild(flagEl);
-                countryEl.appendChild(nameEl);
-                countryEl.appendChild(difficultyEl);
-                
-                countryEl.addEventListener('click', () => {
-                    document.querySelectorAll('.country-select-item').forEach(el => {
-                        el.style.borderColor = 'transparent';
-                    });
-                    countryEl.style.borderColor = 'var(--highlight-color)';
-                    
-                    gameState.playerCountry = country;
-                    elements.startGameBtn.textContent = `Играть за ${country.name}`;
-                    elements.historyText.innerHTML = `<h3>${country.name}</h3><p>${country.history}</p>`;
-                    elements.historyModal.classList.add('active');
-                });
-                
-                elements.countrySelectGrid.appendChild(countryEl);
+            // Сохраняем тему в localStorage
+            localStorage.setItem('theme', theme);
+        }
+        
+        // Проверяем сохраненную тему в localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else {
+            applyTheme('light');
+        }
+        
+        // Обработчики для кнопок смены темы
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const theme = this.getAttribute('data-theme');
+                applyTheme(theme);
             });
-        }
-
-        // Start game with selected country
-        function startGame() {
-            if (!gameState.playerCountry) {
-                showNotification("Пожалуйста, выберите страну для игры");
-                return;
-            }
-            
-            elements.countrySelectModal.style.display = 'none';
-            elements.historyModal.classList.remove('active');
-            gameState.gameStarted = true;
-            gameState.playerCountry.color = gameState.playerColor;
-            
-            createProvinces();
-            updateUI();
-            showNotification(`Добро пожаловать в Age of History 2! Вы играете за ${gameState.playerCountry.name}.`);
-        }
-
-        // Create provinces
-        function createProvinces() {
-            if (!elements.gameMap) return;
-            
-            gameState.provinces = [];
-            const mapWidth = elements.gameMap.clientWidth;
-            const mapHeight = elements.gameMap.clientHeight;
-            
-            // Create provinces for each country
-            gameState.countries.forEach(country => {
-                const provinceCount = 3 + Math.floor(Math.random() * 3);
-                const capitalX = Math.floor(Math.random() * (mapWidth - 100) + 50);
-                const capitalY = Math.floor(Math.random() * (mapHeight - 100) + 50);
-                
-                // Capital
-                const capital = {
-                    id: gameState.provinces.length,
-                    x: capitalX,
-                    y: capitalY,
-                    size: 40 + Math.floor(Math.random() * 20),
-                    name: `${country.name} (столица)`,
-                    countryId: country.id,
-                    isCapital: true,
-                    army: 1 + Math.floor(Math.random() * 2),
-                    navy: 0,
-                    airforce: 0,
-                    goldIncome: 3 + Math.floor(Math.random() * 3),
-                    manpowerIncome: 2 + Math.floor(Math.random() * 2),
-                    element: null
-                };
-                
-                gameState.provinces.push(capital);
-                country.provinces.push(capital.id);
-                
-                // Regular provinces
-                for (let i = 0; i < provinceCount; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const distance = 80 + Math.random() * 60;
-                    const x = Math.max(30, Math.min(mapWidth - 30, capitalX + Math.cos(angle) * distance));
-                    const y = Math.max(30, Math.min(mapHeight - 30, capitalY + Math.sin(angle) * distance));
-                    
-                    const province = {
-                        id: gameState.provinces.length,
-                        x: x,
-                        y: y,
-                        size: 30 + Math.floor(Math.random() * 20),
-                        name: `${getProvinceName(country.name)}`,
-                        countryId: country.id,
-                        isCapital: false,
-                        army: Math.floor(Math.random() * 2),
-                        navy: 0,
-                        airforce: 0,
-                        goldIncome: 1 + Math.floor(Math.random() * 3),
-                        manpowerIncome: 1 + Math.floor(Math.random() * 2),
-                        element: null
-                    };
-                    
-                    gameState.provinces.push(province);
-                    country.provinces.push(province.id);
-                }
-            });
-            
-            // Neutral provinces
-            for (let i = 0; i < 10; i++) {
-                const province = {
-                    id: gameState.provinces.length,
-                    x: Math.floor(Math.random() * (mapWidth - 60) + 30),
-                    y: Math.floor(Math.random() * (mapHeight - 60) + 30),
-                    size: 25 + Math.floor(Math.random() * 15),
-                    name: `Нейтральная территория ${i+1}`,
-                    countryId: null,
-                    isCapital: false,
-                    army: 0,
-                    navy: 0,
-                    airforce: 0,
-                    goldIncome: 1 + Math.floor(Math.random() * 2),
-                    manpowerIncome: 1 + Math.floor(Math.random() * 2),
-                    element: null
-                };
-                
-                gameState.provinces.push(province);
-            }
-            
-            renderProvinces();
-        }
-
-        // Generate province name based on country
-        function getProvinceName(countryName) {
-            const prefixes = {
-                'Россия': ['Московская', 'Новгородская', 'Киевская', 'Владимирская'],
-                'США': ['Техас', 'Калифорния', 'Флорида', 'Нью-Йорк'],
-                'Китай': ['Шаньдун', 'Хэнань', 'Сычуань', 'Гуандун'],
-                'Германия': ['Бавария', 'Пруссия', 'Саксония', 'Гессен'],
-                'Франция': ['Иль-де-Франс', 'Прованс', 'Бретань', 'Нормандия'],
-                'Великобритания': ['Англия', 'Шотландия', 'Уэльс', 'Корнуолл'],
-                'Япония': ['Канто', 'Кансай', 'Тохоку', 'Тюбу'],
-                'Индия': ['Бенгалия', 'Гуджарат', 'Махараштра', 'Тамилнад'],
-                'Бразилия': ['Сан-Паулу', 'Рио-де-Жанейро', 'Минас-Жерайс', 'Баия'],
-                'Италия': ['Ломбардия', 'Пьемонт', 'Тоскана', 'Венето']
-            };
-            
-            const countryPrefixes = prefixes[countryName] || ['Провинция'];
-            return countryPrefixes[Math.floor(Math.random() * countryPrefixes.length)];
-        }
-
-        // Render provinces on map
-        function renderProvinces() {
-            if (!elements.gameMap) return;
-
-            elements.gameMap.innerHTML = '';
-            
-            gameState.provinces.forEach(province => {
-                const provinceEl = document.createElement('div');
-                provinceEl.className = 'province';
-                provinceEl.style.width = `${province.size}px`;
-                provinceEl.style.height = `${province.size}px`;
-                provinceEl.style.left = `${province.x - province.size / 2}px`;
-                provinceEl.style.top = `${province.y - province.size / 2}px`;
-                provinceEl.dataset.provinceId = province.id;
-
-                const labelEl = document.createElement('div');
-                labelEl.className = 'province-label';
-                labelEl.textContent = province.name.split(' ')[0];
-                provinceEl.appendChild(labelEl);
-
-                if (province.countryId !== null) {
-                    const country = gameState.countries[province.countryId];
-                    provinceEl.style.backgroundColor = country.color;
-                    
-                    if (province.isCapital) provinceEl.classList.add('capital');
-                    if (province.army > 0) provinceEl.classList.add('army');
-                    if (province.navy > 0) provinceEl.classList.add('navy');
-                    if (province.airforce > 0) provinceEl.classList.add('airforce');
-                    if (country.id === gameState.playerCountry?.id) provinceEl.classList.add('player');
-                } else {
-                    provinceEl.style.backgroundColor = '#7f8c8d';
-                }
-
-                provinceEl.addEventListener('click', () => selectProvince(province));
-                
-                // Add hover tooltip
-                provinceEl.addEventListener('mouseenter', (e) => {
-                    const tooltip = elements.provinceTooltip;
-                    tooltip.innerHTML = `<strong>${province.name}</strong><br>`;
-                    
-                    if (province.countryId !== null) {
-                        const country = gameState.countries[province.countryId];
-                        tooltip.innerHTML += `Государство: ${country.name}<br>`;
-                    } else {
-                        tooltip.innerHTML += `Государство: Нейтральная территория<br>`;
-                    }
-                    
-                    if (province.isCapital) {
-                        tooltip.innerHTML += `⭐ Столица<br>`;
-                    }
-                    
-                    tooltip.innerHTML += `Доход золота: ${province.goldIncome}<br>`;
-                    tooltip.innerHTML += `Доход ресурсов: ${province.manpowerIncome}<br>`;
-                    
-                    if (province.army > 0) {
-                        tooltip.innerHTML += `Армия: ${province.army}<br>`;
-                    }
-                    if (province.navy > 0) {
-                        tooltip.innerHTML += `Флот: ${province.navy}<br>`;
-                    }
-                    if (province.airforce > 0) {
-                        tooltip.innerHTML += `Авиация: ${province.airforce}<br>`;
-                    }
-                    
-                    tooltip.style.left = `${e.pageX + 15}px`;
-                    tooltip.style.top = `${e.pageY + 15}px`;
-                    tooltip.style.opacity = '1';
-                });
-                
-                provinceEl.addEventListener('mousemove', (e) => {
-                    elements.provinceTooltip.style.left = `${e.pageX + 15}px`;
-                    elements.provinceTooltip.style.top = `${e.pageY + 15}px`;
-                });
-                
-                provinceEl.addEventListener('mouseleave', () => {
-                    elements.provinceTooltip.style.opacity = '0';
-                });
-                
-                elements.gameMap.appendChild(provinceEl);
-            });
-            
-            updateMilitaryCounts();
-        }
-
-        // Select province
-        function selectProvince(province) {
-            if (!gameState.gameStarted) return;
-            
-            gameState.selectedProvince = province;
-            
-            if (gameState.movingUnits) {
-                if (gameState.sourceProvince && gameState.sourceProvince.id !== province.id) {
-                    moveUnits(gameState.sourceProvince, province);
-                    gameState.movingUnits = false;
-                    gameState.sourceProvince = null;
-                    elements.moveUnitsBtn.classList.remove('active');
-                } else if (province.countryId === gameState.playerCountry.id && 
-                          (province.army > 0 || province.navy > 0 || province.airforce > 0)) {
-                    gameState.sourceProvince = province;
-                    showNotification(`Выбрана провинция ${province.name}. Теперь выберите провинцию назначения.`);
-                } else {
-                    showNotification('Выберите свою провинцию с войсками для перемещения');
-                }
-                return;
-            }
-            
-            if (gameState.attacking) {
-                if (gameState.sourceProvince && gameState.sourceProvince.id !== province.id) {
-                    if (province.countryId !== gameState.playerCountry.id) {
-                        attackProvince(gameState.sourceProvince, province);
-                        gameState.attacking = false;
-                        gameState.sourceProvince = null;
-                        elements.attackBtn.classList.remove('active');
-                    } else {
-                        showNotification('Нельзя атаковать свою провинцию');
-                    }
-                } else if (province.countryId === gameState.playerCountry.id && province.army > 0) {
-                    gameState.sourceProvince = province;
-                    showNotification(`Выбрана провинция ${province.name}. Теперь выберите вражескую провинцию для атаки.`);
-                } else {
-                    showNotification('Выберите свою провинцию с армией для атаки');
-                }
-                return;
-            }
-            
-            updateProvinceInfo();
-        }
-
-        // Update province info panel
-        function updateProvinceInfo() {
-            const province = gameState.selectedProvince;
-            elements.selectedProvinceName.textContent = province.name;
-            
-            let html = '';
-            
-            if (province.countryId !== null) {
-                const country = gameState.countries[province.countryId];
-                const isPlayer = country.id === gameState.playerCountry.id;
-                
-                html += `<p>Государство: <strong>${country.name}</strong></p>`;
-                if (province.isCapital) html += `<p>⭐ <strong>Столица</strong></p>`;
-                
-                html += `<p>Доход золота: <strong>${province.goldIncome}</strong></p>`;
-                html += `<p>Доход ресурсов: <strong>${province.manpowerIncome}</strong></p>`;
-                
-                if (province.army > 0) html += `<p>Армия: <strong>${province.army}</strong></p>`;
-                if (province.navy > 0) html += `<p>Флот: <strong>${province.navy}</strong></p>`;
-                if (province.airforce > 0) html += `<p>Авиация: <strong>${province.airforce}</strong></p>`;
-                
-                if (isPlayer) {
-                    elements.recruitArmyBtn.disabled = false;
-                    elements.recruitNavyBtn.disabled = false;
-                    elements.recruitAirforceBtn.disabled = false;
-                } else {
-                    elements.recruitArmyBtn.disabled = true;
-                    elements.recruitNavyBtn.disabled = true;
-                    elements.recruitAirforceBtn.disabled = true;
-                    
-                    const relation = gameState.playerCountry.relations[country.id] || 0;
-                    let relationText = 'Нейтральные';
-                    if (relation > 20) relationText = 'Союзники';
-                    else if (relation > 10) relationText = 'Дружественные';
-                    else if (relation > 0) relationText = 'Положительные';
-                    else if (relation < -20) relationText = 'Враждебные';
-                    else if (relation < -10) relationText = 'Негативные';
-                    else if (relation < 0) relationText = 'Напряженные';
-                    
-                    html += `<p>Отношения: <strong>${relationText} (${relation})</strong></p>`;
-                    
-                    if (gameState.playerCountry.atWarWith.includes(country.id)) {
-                        html += `<p class="war-icon">⚔️ В состоянии войны</p>`;
-                    }
-                }
-            } else {
-                html += `<p>Нейтральная территория</p>`;
-                html += `<p>Доход золота: <strong>${province.goldIncome}</strong></p>`;
-                html += `<p>Доход ресурсов: <strong>${province.manpowerIncome}</strong></p>`;
-                
-                elements.recruitArmyBtn.disabled = true;
-                elements.recruitNavyBtn.disabled = true;
-                elements.recruitAirforceBtn.disabled = true;
-            }
-            
-            elements.provinceInfo.innerHTML = html;
-        }
-
-        // Recruit army
-        function recruitArmy() {
-            const province = gameState.selectedProvince;
-            if (!province || province.countryId !== gameState.playerCountry.id) return;
-            
-            if (gameState.playerCountry.gold >= 10 && gameState.playerCountry.manpower >= 5) {
-                province.army += 1;
-                gameState.playerCountry.armies += 1;
-                gameState.playerCountry.gold -= 10;
-                gameState.playerCountry.manpower -= 5;
-                updateUI();
-                renderProvinces();
-                showNotification(`Армия нанята в провинции ${province.name}`);
-            } else {
-                showNotification('Недостаточно ресурсов (требуется 10 золота и 5 ресурсов)');
-            }
-        }
-
-        // Recruit navy
-        function recruitNavy() {
-            const province = gameState.selectedProvince;
-            if (!province || province.countryId !== gameState.playerCountry.id) return;
-            
-            if (gameState.playerCountry.gold >= 15 && gameState.playerCountry.manpower >= 3) {
-                province.navy += 1;
-                gameState.playerCountry.navies += 1;
-                gameState.playerCountry.gold -= 15;
-                gameState.playerCountry.manpower -= 3;
-                updateUI();
-                renderProvinces();
-                showNotification(`Флот нанят в провинции ${province.name}`);
-            } else {
-                showNotification('Недостаточно ресурсов (требуется 15 золота и 3 ресурса)');
-            }
-        }
-
-        // Recruit air force
-        function recruitAirforce() {
-            const province = gameState.selectedProvince;
-            if (!province || province.countryId !== gameState.playerCountry.id) return;
-            
-            if (gameState.playerCountry.gold >= 20 && gameState.playerCountry.manpower >= 2) {
-                province.airforce += 1;
-                gameState.playerCountry.airforces += 1;
-                gameState.playerCountry.gold -= 20;
-                gameState.playerCountry.manpower -= 2;
-                updateUI();
-                renderProvinces();
-                showNotification(`Авиация нанята в провинции ${province.name}`);
-            } else {
-                showNotification('Недостаточно ресурсов (требуется 20 золота и 2 ресурса)');
-            }
-        }
-
-        // Toggle move units mode
-        function toggleMoveUnits() {
-            gameState.movingUnits = !gameState.movingUnits;
-            gameState.attacking = false;
-            elements.attackBtn.classList.remove('active');
-            
-            if (gameState.movingUnits) {
-                elements.moveUnitsBtn.classList.add('active');
-                showNotification('Режим перемещения войск. Выберите исходную провинцию с вашими войсками.');
-            } else {
-                elements.moveUnitsBtn.classList.remove('active');
-                gameState.sourceProvince = null;
-                showNotification('Перемещение войск отменено');
-            }
-        }
-
-        // Move units between provinces
-        function moveUnits(source, destination) {
-            if (source.countryId !== gameState.playerCountry.id || destination.countryId !== gameState.playerCountry.id) {
-                showNotification('Можно перемещать только между своими провинциями');
-                return;
-            }
-            
-            const distanceBetween = distance(source, destination);
-            if (distanceBetween > 200) {
-                showNotification('Слишком далеко для перемещения (максимум 200 пикселей)');
-                return;
-            }
-            
-            // Move armies
-            if (source.army > 0) {
-                destination.army += source.army;
-                source.army = 0;
-            }
-            
-            // Move navies (only to coastal provinces - simplified)
-            if (source.navy > 0 && destination.navy >= 0) {
-                destination.navy += source.navy;
-                source.navy = 0;
-            }
-            
-            // Move air forces
-            if (source.airforce > 0) {
-                destination.airforce += source.airforce;
-                source.airforce = 0;
-            }
-            
-            updateUI();
-            renderProvinces();
-            showNotification(`Войска перемещены из ${source.name} в ${destination.name}`);
-        }
-
-        // Toggle attack mode
-        function toggleAttack() {
-            gameState.attacking = !gameState.attacking;
-            gameState.movingUnits = false;
-            elements.moveUnitsBtn.classList.remove('active');
-            
-            if (gameState.attacking) {
-                elements.attackBtn.classList.add('active');
-                showNotification('Режим атаки. Выберите свою провинцию с армией для атаки.');
-            } else {
-                elements.attackBtn.classList.remove('active');
-                gameState.sourceProvince = null;
-                showNotification('Атака отменена');
-            }
-        }
-
-        // Attack a province
-        function attackProvince(source, target) {
-            if (source.army <= 0) {
-                showNotification('В исходной провинции нет армии');
-                return;
-            }
-            
-            const distanceBetween = distance(source, target);
-            if (distanceBetween > 150) {
-                showNotification('Слишком далеко для атаки (максимум 150 пикселей)');
-                return;
-            }
-            
-            const attacker = gameState.playerCountry;
-            const defender = target.countryId !== null ? gameState.countries[target.countryId] : null;
-            
-            // If attacking neutral territory, create a temporary defender
-            if (!defender) {
-                const neutralDefender = {
-                    id: -1,
-                    name: "Нейтральные силы",
-                    color: '#7f8c8d',
-                    flag: 'https://flagcdn.com/w80/un.png',
-                    armies: 0,
-                    relations: {},
-                    atWarWith: []
-                };
-                defender = neutralDefender;
-            }
-            
-            // Declare war if not already at war
-            if (defender.id !== -1 && !attacker.atWarWith.includes(defender.id)) {
-                attacker.atWarWith.push(defender.id);
-                if (defender.atWarWith) defender.atWarWith.push(attacker.id);
-                showNotification(`Объявлена война между ${attacker.name} и ${defender.name}!`);
-            }
-            
-            // Calculate battle outcome
-            const battleResult = calculateBattle(source, target);
-            
-            // Show battle modal
-            showBattleReport(attacker, defender, battleResult);
-            
-            // Apply battle results
-            if (battleResult.attackerWins) {
-                // Attacker conquers the province
-                target.countryId = attacker.id;
-                target.army = battleResult.attackerRemainingArmy;
-                target.navy = 0;
-                target.airforce = 0;
-                
-                // Remove from defender's provinces and add to attacker's
-                if (defender.id !== -1) {
-                    defender.provinces = defender.provinces.filter(id => id !== target.id);
-                    attacker.provinces.push(target.id);
-                    
-                    // Check if defender is eliminated
-                    if (defender.provinces.length === 0) {
-                        showNotification(`${defender.name} уничтожена!`);
-                        attacker.gold += defender.gold;
-                        defender.gold = 0;
-                    }
-                } else {
-                    // Conquering neutral territory
-                    attacker.provinces.push(target.id);
-                    showNotification(`Нейтральная территория ${target.name} захвачена!`);
-                }
-            } else {
-                // Defender repels attack
-                source.army = 0;
-                if (target.countryId !== null) {
-                    target.army = battleResult.defenderRemainingArmy;
-                }
-            }
-            
-            // Update counts
-            updateMilitaryCounts();
-            
-            // Check for victory
-            checkVictory();
-        }
-
-        // Calculate battle outcome
-        function calculateBattle(source, target) {
-            const attackerArmy = source.army;
-            const defenderArmy = target.army || 1; // At least 1 for empty provinces
-            
-            // Base combat values
-            let attackerPower = attackerArmy * (1 + Math.random() * 0.2); // 1.0-1.2 per unit
-            let defenderPower = defenderArmy * (1 + Math.random() * 0.3); // 1.0-1.3 per unit
-            
-            // Defender advantage
-            defenderPower *= 1.2;
-            
-            // Capital defense bonus
-            if (target.isCapital) {
-                defenderPower *= 1.5;
-            }
-            
-            // Air support bonus
-            if (source.airforce > 0) {
-                attackerPower *= 1 + source.airforce * 0.1;
-            }
-            if (target.airforce > 0) {
-                defenderPower *= 1 + target.airforce * 0.1;
-            }
-            
-            // Determine outcome
-            const attackerWins = attackerPower > defenderPower;
-            
-            // Calculate losses
-            let attackerLosses, defenderLosses;
-            if (attackerWins) {
-                const ratio = defenderPower / attackerPower;
-                attackerLosses = Math.max(1, Math.floor(attackerArmy * ratio * 0.8));
-                defenderLosses = defenderArmy;
-            } else {
-                const ratio = attackerPower / defenderPower;
-                attackerLosses = attackerArmy;
-                defenderLosses = Math.max(1, Math.floor(defenderArmy * ratio * 0.6));
-            }
-            
-            return {
-                attackerWins,
-                attackerLosses,
-                defenderLosses,
-                attackerPower: Math.round(attackerPower * 10) / 10,
-                defenderPower: Math.round(defenderPower * 10) / 10,
-                attackerRemainingArmy: attackerWins ? attackerArmy - attackerLosses : 0,
-                defenderRemainingArmy: attackerWins ? 0 : defenderArmy - defenderLosses
-            };
-        }
-
-        // Show battle report
-        function showBattleReport(attacker, defender, result) {
-            elements.attackerFlag.src = attacker.flag;
-            elements.attackerName.textContent = attacker.name;
-            elements.attackerPower.textContent = `Сила: ${result.attackerPower}`;
-            elements.defenderFlag.src = defender.flag;
-            elements.defenderName.textContent = defender.name;
-            elements.defenderPower.textContent = `Сила: ${result.defenderPower}`;
-            
-            elements.battleResult.textContent = result.attackerWins ? 'ПОБЕДА!' : 'ПОРАЖЕНИЕ!';
-            elements.attackerLosses.textContent = result.attackerLosses;
-            elements.defenderLosses.textContent = result.defenderLosses;
-            
-            elements.battleModal.classList.add('active');
-        }
-
-        // Update military counts for all countries
-        function updateMilitaryCounts() {
-            gameState.countries.forEach(country => {
-                if (country.provinces.length === 0) {
-                    country.armies = 0;
-                    country.navies = 0;
-                    country.airforces = 0;
-                    return;
-                }
-                
-                const countryProvinces = gameState.provinces.filter(p => p.countryId === country.id);
-                country.armies = countryProvinces.reduce((sum, p) => sum + p.army, 0);
-                country.navies = countryProvinces.reduce((sum, p) => sum + p.navy, 0);
-                country.airforces = countryProvinces.reduce((sum, p) => sum + p.airforce, 0);
-            });
-            
-            updateUI();
-        }
-
-        // End turn
-        function endTurn() {
-            gameState.turn++;
-            
-            // Player income
-            const playerProvinces = gameState.provinces.filter(p => p.countryId === gameState.playerCountry.id);
-            const goldIncome = playerProvinces.reduce((sum, p) => sum + p.goldIncome, 0);
-            const manpowerIncome = playerProvinces.reduce((sum, p) => sum + p.manpowerIncome, 0);
-            
-            gameState.playerCountry.gold += goldIncome;
-            gameState.playerCountry.manpower += manpowerIncome;
-            
-            // AI turns
-            gameState.countries.forEach(country => {
-                if (country.id !== gameState.playerCountry.id && country.provinces.length > 0) {
-                    aiTurn(country);
-                }
-            });
-            
-            updateUI();
-            renderProvinces();
-            
-            showNotification(`Ход ${gameState.turn} начат. Доход: +${goldIncome} золота, +${manpowerIncome} ресурсов`);
-            
-            // Check for victory
-            checkVictory();
-        }
-
-        // AI turn logic
-        function aiTurn(country) {
-            // AI income
-            const aiProvinces = gameState.provinces.filter(p => p.countryId === country.id);
-            const goldIncome = aiProvinces.reduce((sum, p) => sum + p.goldIncome, 0);
-            const manpowerIncome = aiProvinces.reduce((sum, p) => sum + p.manpowerIncome, 0);
-            
-            country.gold += goldIncome;
-            country.manpower += manpowerIncome;
-            
-            // AI recruitment
-            aiProvinces.forEach(province => {
-                if (country.gold > 15 && country.manpower > 5 && Math.random() > 0.7) {
-                    const choice = Math.random();
-                    if (choice < 0.6) {
-                        // Recruit army
-                        province.army += 1;
-                        country.armies += 1;
-                        country.gold -= 10;
-                        country.manpower -= 5;
-                    } else if (choice < 0.9) {
-                        // Recruit navy
-                        province.navy += 1;
-                        country.navies += 1;
-                        country.gold -= 15;
-                        country.manpower -= 3;
-                    } else {
-                        // Recruit air force
-                        province.airforce += 1;
-                        country.airforces += 1;
-                        country.gold -= 20;
-                        country.manpower -= 2;
-                    }
-                }
-            });
-            
-            // AI attacks
-            if (country.atWarWith.length > 0 && country.armies > 0) {
-                const warWith = country.atWarWith[Math.floor(Math.random() * country.atWarWith.length)];
-                const enemyCountry = gameState.countries[warWith];
-                
-                if (enemyCountry.provinces.length > 0) {
-                    // Find provinces with armies
-                    const aiProvinceWithArmy = aiProvinces.find(p => p.army > 0);
-                    const enemyProvinces = gameState.provinces.filter(p => p.countryId === enemyCountry.id);
-                    
-                    if (aiProvinceWithArmy && enemyProvinces.length > 0) {
-                        const targetProvince = enemyProvinces[Math.floor(Math.random() * enemyProvinces.length)];
-                        
-                        // Simulate attack
-                        const battleResult = calculateBattle(aiProvinceWithArmy, targetProvince);
-                        
-                        if (battleResult.attackerWins) {
-                            // AI conquers the province
-                            targetProvince.countryId = country.id;
-                            targetProvince.army = battleResult.attackerRemainingArmy;
-                            targetProvince.navy = 0;
-                            targetProvince.airforce = 0;
-                            
-                            // Remove from enemy's provinces and add to AI's
-                            enemyCountry.provinces = enemyCountry.provinces.filter(id => id !== targetProvince.id);
-                            country.provinces.push(targetProvince.id);
-                            
-                            // Check if enemy is eliminated
-                            if (enemyCountry.provinces.length === 0) {
-                                country.gold += enemyCountry.gold;
-                                enemyCountry.gold = 0;
-                            }
-                        } else {
-                            // Defender repels attack
-                            aiProvinceWithArmy.army = 0;
-                            targetProvince.army = battleResult.defenderRemainingArmy;
-                        }
-                    }
-                }
-            }
-            
-            // AI diplomacy
-            if (Math.random() > 0.8) {
-                const randomCountryId = Math.floor(Math.random() * gameState.countries.length);
-                if (randomCountryId !== country.id && !country.atWarWith.includes(randomCountryId)) {
-                    const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
-                    country.relations[randomCountryId] = (country.relations[randomCountryId] || 0) + change;
-                }
-            }
-            
-            // Update military counts
-            updateMilitaryCounts();
-        }
-
-        // Check for victory
-        function checkVictory() {
-            // Player eliminated
-            if (gameState.playerCountry.provinces.length === 0) {
-                showVictory(false);
-                return;
-            }
-            
-            // Player conquered all
-            const remainingCountries = gameState.countries.filter(c => c.provinces.length > 0 && c.id !== gameState.playerCountry.id);
-            if (remainingCountries.length === 0) {
-                showVictory(true);
-            }
-        }
-
-        // Show victory/defeat screen
-        function showVictory(victory) {
-            if (victory) {
-                elements.victoryTitle.textContent = 'ПОБЕДА!';
-                elements.victoryText.textContent = `Вы завоевали мир за ${gameState.turn} ходов!`;
-            } else {
-                elements.victoryTitle.textContent = 'ПОРАЖЕНИЕ';
-                elements.victoryText.textContent = `Ваша империя пала после ${gameState.turn} ходов.`;
-            }
-            
-            elements.victoryTurns.textContent = gameState.turn;
-            elements.victoryProvinces.textContent = gameState.playerCountry.provinces.length;
-            elements.victoryArmy.textContent = gameState.playerCountry.armies + gameState.playerCountry.navies + gameState.playerCountry.airforces;
-            
-            elements.victoryScreen.classList.add('active');
-        }
-
-        // Start new game
-        function newGame() {
-            // Reset game state
-            gameState.turn = 1;
-            gameState.playerCountry = null;
-            gameState.countries = [];
-            gameState.provinces = [];
-            gameState.selectedProvince = null;
-            gameState.gold = 100;
-            gameState.manpower = 50;
-            gameState.movingUnits = false;
-            gameState.attacking = false;
-            gameState.sourceProvince = null;
-            gameState.gameStarted = false;
-            
-            // Clear UI
-            elements.victoryScreen.classList.remove('active');
-            elements.battleModal.classList.remove('active');
-            elements.moveUnitsBtn.classList.remove('active');
-            elements.attackBtn.classList.remove('active');
-            
-            // Reinitialize game
-            initGame();
-        }
-
-        // Update UI
-        function updateUI() {
-            if (!gameState.playerCountry) return;
-            
-            // Update counters
-            elements.turnCounter.textContent = gameState.turn;
-            elements.goldCounter.textContent = gameState.playerCountry.gold;
-            elements.manpowerCounter.textContent = gameState.playerCountry.manpower;
-            elements.provincesCounter.textContent = gameState.playerCountry.provinces.length;
-            
-            // Calculate income
-            const playerProvinces = gameState.provinces.filter(p => p.countryId === gameState.playerCountry.id);
-            const goldIncome = playerProvinces.reduce((sum, p) => sum + p.goldIncome, 0);
-            const manpowerIncome = playerProvinces.reduce((sum, p) => sum + p.manpowerIncome, 0);
-            
-            elements.goldIncome.textContent = `+${goldIncome}`;
-            elements.manpowerIncome.textContent = `+${manpowerIncome}`;
-            
-            // Update military counts
-            elements.armyCount.textContent = gameState.playerCountry.armies;
-            elements.navyCount.textContent = gameState.playerCountry.navies;
-            elements.airforceCount.textContent = gameState.playerCountry.airforces;
-            elements.totalPower.textContent = gameState.playerCountry.armies + gameState.playerCountry.navies + gameState.playerCountry.airforces;
-            
-            // Update countries list
-            updateCountriesList();
-            
-            // Update selected province info if one is selected
-            if (gameState.selectedProvince) {
-                updateProvinceInfo();
-            }
-        }
-
-        // Update countries list
-        function updateCountriesList() {
-            elements.countriesList.innerHTML = '';
-            
-            gameState.countries.forEach(country => {
-                if (country.provinces.length === 0) return;
-                
-                const countryEl = document.createElement('div');
-                countryEl.className = `country-item ${country.id === gameState.playerCountry.id ? 'player' : ''}`;
-                
-                // Add diplomacy status class
-                if (country.id !== gameState.playerCountry.id) {
-                    if (gameState.playerCountry.atWarWith.includes(country.id)) {
-                        countryEl.classList.add('at-war');
-                    } else if ((gameState.playerCountry.relations[country.id] || 0) > 15) {
-                        countryEl.classList.add('allied');
-                    } else if ((gameState.playerCountry.relations[country.id] || 0) > 0) {
-                        countryEl.classList.add('truce');
-                    } else {
-                        countryEl.classList.add('neutral');
-                    }
-                }
-                
-                const flagEl = document.createElement('img');
-                flagEl.className = 'country-flag';
-                flagEl.src = country.flag;
-                flagEl.alt = country.name;
-                
-                const nameEl = document.createElement('div');
-                nameEl.className = 'country-name';
-                nameEl.textContent = country.name;
-                
-                const powerEl = document.createElement('div');
-                powerEl.className = 'country-power';
-                powerEl.textContent = country.provinces.length;
-                
-                countryEl.appendChild(flagEl);
-                countryEl.appendChild(nameEl);
-                countryEl.appendChild(powerEl);
-                
-                // Add war/peace indicator
-                if (country.id !== gameState.playerCountry.id) {
-                    const relation = gameState.playerCountry.relations[country.id] || 0;
-                    const atWar = gameState.playerCountry.atWarWith.includes(country.id);
-                    
-                    const statusEl = document.createElement('span');
-                    statusEl.className = atWar ? 'war-icon' : 'peace-icon';
-                    statusEl.textContent = atWar ? ' ⚔️' : ' ☮️';
-                    nameEl.appendChild(statusEl);
-                    
-                    // Add diplomacy options
-                    if (!atWar) {
-                        const improveBtn = document.createElement('button');
-                        improveBtn.className = 'btn btn-secondary';
-                        improveBtn.textContent = 'Улучшить (+5)';
-                        improveBtn.style.margin = '2px 0';
-                        improveBtn.style.padding = '3px 5px';
-                        improveBtn.style.fontSize = '12px';
-                        improveBtn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            if (gameState.playerCountry.gold >= 20) {
-                                gameState.playerCountry.gold -= 20;
-                                gameState.playerCountry.relations[country.id] = (gameState.playerCountry.relations[country.id] || 0) + 5;
-                                updateUI();
-                                showNotification(`Отношения с ${country.name} улучшены`);
-                            } else {
-                                showNotification('Нужно 20 золота для улучшения отношений');
-                            }
-                        });
-                        
-                        const declareWarBtn = document.createElement('button');
-                        declareWarBtn.className = 'btn btn-secondary';
-                        declareWarBtn.textContent = 'Объявить войну';
-                        declareWarBtn.style.margin = '2px 0';
-                        declareWarBtn.style.padding = '3px 5px';
-                        declareWarBtn.style.fontSize = '12px';
-                        declareWarBtn.style.backgroundColor = '#e74c3c';
-                        declareWarBtn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            gameState.playerCountry.atWarWith.push(country.id);
-                            country.atWarWith.push(gameState.playerCountry.id);
-                            updateUI();
-                            showNotification(`Война объявлена с ${country.name}!`);
-                        });
-                        
-                        const actionsEl = document.createElement('div');
-                        actionsEl.style.display = 'flex';
-                        actionsEl.style.gap = '5px';
-                        actionsEl.style.marginTop = '5px';
-                        
-                        actionsEl.appendChild(improveBtn);
-                        actionsEl.appendChild(declareWarBtn);
-                        
-                        countryEl.appendChild(actionsEl);
-                    }
-                }
-                
-                elements.countriesList.appendChild(countryEl);
-            });
-        }
-
-        // Show notification
-        function showNotification(message) {
-            elements.notificationMessage.textContent = message;
-            elements.notification.classList.add('show');
-            
-            setTimeout(() => {
-                elements.notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Calculate distance between two provinces
-        function distance(p1, p2) {
-            return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Sidebar toggle
-            elements.sidebarToggle.addEventListener('click', () => {
-                elements.sidebar.classList.toggle('sidebar-hidden');
-            });
-            
-            // Tab buttons
-            elements.tabButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    elements.tabButtons.forEach(b => b.classList.remove('active'));
-                    elements.tabContents.forEach(c => c.classList.remove('active'));
-                    
-                    btn.classList.add('active');
-                    const tabId = btn.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-            
-            // Action buttons
-            elements.recruitArmyBtn.addEventListener('click', recruitArmy);
-            elements.recruitNavyBtn.addEventListener('click', recruitNavy);
-            elements.recruitAirforceBtn.addEventListener('click', recruitAirforce);
-            elements.moveUnitsBtn.addEventListener('click', toggleMoveUnits);
-            elements.attackBtn.addEventListener('click', toggleAttack);
-            elements.endTurnBtn.addEventListener('click', endTurn);
-            
-            // Battle modal
-            elements.closeBattleBtn.addEventListener('click', () => {
-                elements.battleModal.classList.remove('active');
-            });
-            
-            // Victory screen
-            elements.newGameBtn.addEventListener('click', newGame);
-            
-            // Zoom controls
-            elements.zoomIn.addEventListener('click', () => {
-                gameState.mapScale *= 1.2;
-                elements.gameMap.style.transform = `scale(${gameState.mapScale})`;
-            });
-            
-            elements.zoomOut.addEventListener('click', () => {
-                gameState.mapScale /= 1.2;
-                elements.gameMap.style.transform = `scale(${gameState.mapScale})`;
-            });
-            
-            // Start game button
-            elements.startGameBtn.addEventListener('click', startGame);
-            
-            // History close button
-            elements.historyCloseBtn.addEventListener('click', () => {
-                elements.historyModal.classList.remove('active');
-            });
-            
-            // Window resize
-            window.addEventListener('resize', () => {
-                if (gameState.gameStarted) renderProvinces();
-            });
-        }
-
-        // Initialize the game when the page loads
-        window.addEventListener('DOMContentLoaded', function() {
-            initGame();
         });
+        
+        // База данных записей (в реальном приложении это было бы на сервере)
+        let recordsDatabase = {
+            lyukhaidan: [],
+            dausari: [],
+            sildinsky: [],
+            'mishari-rashid': []
+        };
+        
+        // Загружаем записи из localStorage
+        function loadRecords() {
+            const savedRecords = localStorage.getItem('quranRecords');
+            if (savedRecords) {
+                recordsDatabase = JSON.parse(savedRecords);
+                updateRecordsDisplay();
+            }
+        }
+        
+        // Сохраняем записи в localStorage
+        function saveRecords() {
+            localStorage.setItem('quranRecords', JSON.stringify(recordsDatabase));
+            updateRecordsDisplay();
+        }
+        
+        // Обновляем отображение записей
+        function updateRecordsDisplay() {
+            for (const reciter in recordsDatabase) {
+                const container = document.getElementById(`${reciter}-records`);
+                const countElement = document.querySelector(`.reciter-card[data-reciter="${reciter}"] .record-count`);
+                
+                // Обновляем счетчик записей
+                countElement.textContent = recordsDatabase[reciter].length;
+                
+                // Очищаем контейнер
+                container.innerHTML = '';
+                
+                // Добавляем записи
+                recordsDatabase[reciter].forEach((record, index) => {
+                    const recordElement = document.createElement('div');
+                    recordElement.className = 'record-item';
+                    recordElement.innerHTML = `
+                        <div class="record-info">
+                            <h4>${record.title}</h4>
+                            <p>${record.description || 'Без описания'}</p>
+                        </div>
+                        <div class="record-controls">
+                            <button class="play-btn" data-reciter="${reciter}" data-index="${index}">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(recordElement);
+                });
+            }
+        }
+        
+        // Обработчик для открытия/закрытия списка записей
+        document.querySelectorAll('.reciter-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Проверяем, не было ли клика по кнопке воспроизведения
+                if (e.target.closest('.play-btn')) return;
+                
+                const reciter = this.getAttribute('data-reciter');
+                const recordsContainer = document.getElementById(`${reciter}-records`);
+                
+                // Закрываем все открытые контейнеры
+                document.querySelectorAll('.records-container').forEach(container => {
+                    if (container !== recordsContainer) {
+                        container.classList.remove('active');
+                    }
+                });
+                
+                // Открываем/закрываем текущий контейнер
+                recordsContainer.classList.toggle('active');
+            });
+        });
+        
+        // Переключение между вкладками формы
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Убираем активный класс у всех кнопок и контента
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Добавляем активный класс текущей кнопке и контенту
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Обработчик выбора файла
+        document.getElementById('audioFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Файл не выбран';
+            document.getElementById('fileName').textContent = fileName;
+        });
+        
+        // Функция для извлечения ID видео из YouTube ссылки
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+        
+        // Функция для создания ссылки на аудио из YouTube
+        function createYouTubeAudioLink(url) {
+            const videoId = getYouTubeId(url);
+            if (!videoId) return null;
+            return `https://www.youtube.com/watch?v=${videoId}`;
+        }
+        
+        // Функция для обработки Telegram ссылки
+        function processTelegramLink(url) {
+            // В реальном приложении здесь бы была логика обработки Telegram ссылки
+            // Возвращаем как есть, так как для демо мы не можем реально получить аудиофайл
+            return url;
+        }
+        
+        // Функция для загрузки файла (эмуляция)
+        function uploadFile(file) {
+            return new Promise((resolve) => {
+                const uploadModal = document.getElementById('uploadModal');
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('progressText');
+                const uploadProgress = document.getElementById('uploadProgress');
+                const uploadResult = document.getElementById('uploadResult');
+                const resultMessage = document.getElementById('resultMessage');
+                
+                // Показываем модальное окно
+                uploadModal.classList.add('active');
+                
+                // Эмулируем загрузку
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.value = progress;
+                    progressText.textContent = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Генерируем случайную ссылку для демо
+                        const randomId = Math.random().toString(36).substring(2, 15);
+                        const fileUrl = `https://example.com/uploads/${randomId}/${file.name}`;
+                        
+                        // Показываем результат
+                        uploadProgress.style.display = 'none';
+                        uploadResult.style.display = 'block';
+                        resultMessage.textContent = `Файл "${file.name}" успешно загружен!`;
+                        
+                        // Обработчик кнопки копирования
+                        document.getElementById('copyLinkBtn').addEventListener('click', () => {
+                            navigator.clipboard.writeText(fileUrl).then(() => {
+                                alert('Ссылка скопирована в буфер обмена!');
+                            });
+                        });
+                        
+                        resolve(fileUrl);
+                    }
+                }, 200);
+            });
+        }
+        
+        // Обработчик формы добавления записи
+        document.getElementById('recordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const reciter = document.getElementById('reciter').value;
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const activeTab = document.querySelector('.tab-content.active').id;
+            
+            if (!reciter || !title) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            let audioUrl = '';
+            
+            try {
+                // Обрабатываем в зависимости от активной вкладки
+                if (activeTab === 'link-tab') {
+                    audioUrl = document.getElementById('audioUrl').value;
+                    if (!audioUrl) {
+                        alert('Пожалуйста, укажите ссылку на аудио');
+                        return;
+                    }
+                } 
+                else if (activeTab === 'file-tab') {
+                    const fileInput = document.getElementById('audioFile');
+                    if (!fileInput.files[0]) {
+                        alert('Пожалуйста, выберите аудиофайл');
+                        return;
+                    }
+                    
+                    audioUrl = await uploadFile(fileInput.files[0]);
+                } 
+                else if (activeTab === 'telegram-tab') {
+                    const telegramLink = document.getElementById('telegramLink').value;
+                    if (!telegramLink) {
+                        alert('Пожалуйста, укажите ссылку на Telegram аудио');
+                        return;
+                    }
+                    audioUrl = processTelegramLink(telegramLink);
+                } 
+                else if (activeTab === 'youtube-tab') {
+                    const youtubeLink = document.getElementById('youtubeLink').value;
+                    if (!youtubeLink) {
+                        alert('Пожалуйста, укажите ссылку на YouTube видео');
+                        return;
+                    }
+                    audioUrl = createYouTubeAudioLink(youtubeLink);
+                    if (!audioUrl) {
+                        alert('Некорректная ссылка на YouTube видео');
+                        return;
+                    }
+                }
+                
+                // Добавляем запись в базу данных
+                const newRecord = {
+                    title,
+                    description,
+                    audioUrl,
+                    createdAt: new Date().toISOString(),
+                    source: activeTab
+                };
+                
+                recordsDatabase[reciter].unshift(newRecord);
+                saveRecords();
+                
+                // Очищаем форму
+                this.reset();
+                document.getElementById('fileName').textContent = 'Файл не выбран';
+                
+                // Закрываем модальное окно загрузки, если было открыто
+                document.getElementById('uploadModal').classList.remove('active');
+                document.getElementById('uploadProgress').style.display = 'block';
+                document.getElementById('uploadResult').style.display = 'none';
+                document.getElementById('progressBar').value = 0;
+                document.getElementById('progressText').textContent = '0%';
+                
+                // Показываем уведомление
+                alert('Запись успешно добавлена!');
+                
+            } catch (error) {
+                console.error('Ошибка при добавлении записи:', error);
+                alert('Произошла ошибка при добавлении записи');
+            }
+        });
+        
+        // Закрытие модального окна загрузки
+        document.getElementById('closeUploadModal').addEventListener('click', function() {
+            document.getElementById('uploadModal').classList.remove('active');
+        });
+        
+        // Audio Player Functionality
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.querySelector('.play-pause-btn');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressContainer = document.querySelector('.progress-container');
+        const timeDisplay = document.querySelector('.time');
+        const closePlayerBtn = document.getElementById('closePlayer');
+        const mainAudio = document.getElementById('mainAudio');
+        const playerImg = document.querySelector('.player-img img');
+        const playerTitle = document.querySelector('.player-info h4');
+        const playerDesc = document.querySelector('.player-info p');
+        
+        // Воспроизведение записи
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.play-btn')) {
+                const btn = e.target.closest('.play-btn');
+                const reciter = btn.getAttribute('data-reciter');
+                const index = btn.getAttribute('data-index');
+                const record = recordsDatabase[reciter][index];
+                
+                // Обновляем информацию в плеере
+                playerImg.src = `https://via.placeholder.com/60x60?text=${encodeURIComponent(reciter)}`;
+                playerTitle.textContent = record.title;
+                playerDesc.textContent = reciter;
+                
+                // Устанавливаем аудио
+                mainAudio.src = record.audioUrl;
+                
+                // Воспроизводим
+                mainAudio.play();
+                audioPlayer.classList.add('active');
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        });
+        
+        // Play/Pause button
+        playPauseBtn.addEventListener('click', () => {
+            if (mainAudio.paused) {
+                mainAudio.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                mainAudio.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+        
+        // Update progress bar
+        mainAudio.addEventListener('timeupdate', () => {
+            const { currentTime, duration } = mainAudio;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            
+            // Update time display
+            const currentMinutes = Math.floor(currentTime / 60);
+            let currentSeconds = Math.floor(currentTime % 60);
+            if (currentSeconds < 10) currentSeconds = `0${currentSeconds}`;
+            
+            const durationMinutes = Math.floor(duration / 60);
+            let durationSeconds = Math.floor(duration % 60);
+            if (durationSeconds < 10) durationSeconds = `0${durationSeconds}`;
+            
+            timeDisplay.textContent = `${currentMinutes}:${currentSeconds} / ${durationMinutes}:${durationSeconds}`;
+        });
+        
+        // Click on progress bar to seek
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = mainAudio.duration;
+            mainAudio.currentTime = (clickX / width) * duration;
+        });
+        
+        // Close player
+        closePlayerBtn.addEventListener('click', () => {
+            audioPlayer.classList.remove('active');
+            mainAudio.pause();
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        });
+        
+        // Audio ended
+        mainAudio.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            progressBar.style.width = '0%';
+            timeDisplay.textContent = '00:00 / 00:00';
+        });
+        
+        // Загружаем записи при загрузке страницы
+        window.addEventListener('DOMContentLoaded', loadRecords);
     </script>
 </body>
 </html>
